@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'QUE.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'queapp$default',
+        'NAME': 'queapp$que_db',
         'USER': 'queapp',
         'PASSWORD': 'Que_db6501@',
         'HOST': 'queapp.mysql.pythonanywhere-services.com',
