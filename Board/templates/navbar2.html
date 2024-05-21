@@ -1,0 +1,51 @@
+{% load custom_tags %}
+
+<nav class="navbar fixed-top navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'Ramp_View' %}">QUE</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                {% if user.is_authenticated %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link " href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-list-nested"></i> Views
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'Ramp_View' %}">Ramp View</a></li>
+                        <li><a class="dropdown-item" href="{% url 'BHS_View' %}">BHS View</a></li>
+                        {% if user|Host_User %}
+                        <li><a class="dropdown-item" href="{% url 'Host_View' %}">Host View</a></li>
+                        {% endif %}
+                    </ul>
+                </li>
+                {% endif %}
+                {% if user|Active_User %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'Manage' %}"><i class="bi bi-sliders"></i> Manage</a>
+                </li>
+                {% endif %}
+            </ul>
+
+            {% if user.is_authenticated %}
+
+                <div class="btn-dark">
+                    <button type="button" class="btn btn-dark" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi bi-person-fill"></i> {{ user.username }} 
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-start dropdown-menu-lg-end me-2">
+                        <!-- <li><a class="dropdown-item" href="#"><i class="bi bi-list-nested"></i> My Flights</a></li>
+                        <li><hr class="dropdown-divider"></li> -->
+                        <li><a class="dropdown-item" href="{% url 'User_Logout' %}"><i class="bi bi-person-dash-fill"></i> Logout</a></li>
+                    </ul>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+</nav>
+
+
+

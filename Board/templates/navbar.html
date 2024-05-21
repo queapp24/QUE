@@ -1,0 +1,114 @@
+{% load custom_tags %}
+
+<nav class="navbar fixed-top bg-body-tertiary">
+    <div class="container-fluid d-flex justify-content-between align-items-center mx-5">
+        
+        <!-- Views -->
+        <!-- <div class="navbar-nav">
+            <a class="nav-link " href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-list-nested navIcons"></i>
+            </a>
+            <ul class="dropdown-menu" style="
+                position: absolute;
+                top: 100%;
+                left: 0;
+                z-index: 1000;
+                margin-left: 2rem;
+                margin-top: 1rem;
+            ">
+                <li><a class="dropdown-item" href="{% url 'Ramp_View' %}">Ramp View</a></li>
+                <li><a class="dropdown-item" href="{% url 'BHS_View' %}">BHS View</a></li>
+                {% if user|Host_User %}
+                <li><a class="dropdown-item" href="{% url 'Host_View' %}">Host View</a></li>
+                {% endif %}
+            </ul>
+        </div> -->
+
+        <div class="navbar-nav">
+            <a class="nav-link" data-bs-toggle="offcanvas" href="#views" role="button"><i class="bi bi-list-nested navIcons"></i></a>
+
+        </div>
+
+
+
+        <div class="navbar-nav">
+            <a class="nav-link" data-bs-toggle="offcanvas" href="#archive" role="button"><i class="bi bi-archive-fill navIcons"></i></a>
+
+        </div>
+
+
+
+        <div class="navbar-nav">
+            <a class="nav-link" href="#"><i class="bi bi-three-dots navIcons"></i></a>
+        </div>
+
+
+
+        <div class="navbar-nav">
+            <a class="nav-link " href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-person-circle navIcons"></i>
+            </a>
+            <ul class="dropdown-menu" style="
+                position: absolute;
+                top: 100%;
+                left: 0;
+                z-index: 1000;
+                margin-left: 2rem;
+                margin-top: 1rem;
+            ">
+                <li><a class="dropdown-item" href="{% url 'User_Logout' %}"><i class="bi bi-person-dash-fill"></i> Logout</a></li>
+            </ul>
+        </div>
+
+    </div>
+
+</nav>
+
+<!-- VIEWS OFF CANVAS -->
+<div class="offcanvas offcanvas-top" tabindex="-1" id="views" aria-labelledby="offcanvasExampleLabel">
+
+    <div class="offcanvas-header">
+        <h4 class="offcanvas-title" id="offcanvasExampleLabel">Select a View.</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+
+    <div class="offcanvas-body container-fluid d-flex justify-content-between align-items-center">
+        <div></div>
+        <h5><a href="{% url 'Ramp_View' %}" style="text-decoration: none; color: whitesmoke;">Ramp View</a></h5><br>
+        <h5><a href="{% url 'BHS_View' %}" style="text-decoration: none; color: whitesmoke;">BHS View</a></h5>
+        <div></div>
+    </div>
+
+</div>
+
+<!-- Archive OFF CANVAS -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="archive" aria-labelledby="offcanvasExampleLabel">
+    <div class="offcanvas-header">
+        <h2 class="offcanvas-title" id="offcanvasExampleLabel">Hidden Flights</h2>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Flight Nbr.</th>
+                    <th>Show</th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                {% for h in hidden %}
+                    <tr>
+                        <td>{{ h.H_FTND }}</td>
+                        <td>
+                            <a href="{% url 'Show' h.H_FTND %}" style="text-decoration: none; color: whitesmoke;"><h4 class="m-0"><i class="bi bi-eye" style="font-size: 1rem;"></i></h4></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+<br><br><br>

@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="container text-start text-truncate">
+
+        <br><br><br>
+
+        <h1>Manage</h1>
+        <br>
+
+        {% if user.is_authenticated %}
+
+        <h2>Drivers</h2>
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Area</th>
+                    <th scope="col">Status</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                {% for driver in drivers %}
+                    <tr>
+                        <td>{{ driver.DR_NAME }}</td>
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn btn-dark btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    {{ driver.DR_AREA }}
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="{% url 'DRVR_Area_ARR' driver.DR_NAME %}">ARR</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'DRVR_Area_DEP' driver.DR_NAME %}">DEP</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn btn-dark btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    {% if driver.DR_STAT %}
+                                        Available
+                                    {% else %}
+                                        Not Available
+                                    {% endif %}
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="{% url 'Add_DRVR' driver.DR_NAME %}">Available</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'Remove_DRVR' driver.DR_NAME %}">Not Available</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    
+        {% else %}
+        <h2>u gotta login first boy</h2>
+        {% endif %}
+    
+    </div>
+
+{% endblock %}

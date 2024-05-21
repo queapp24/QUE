@@ -1,0 +1,19 @@
+<div class="cardCenter">
+    <div class="card" style="width: 21rem;">
+        <div class="card-header">
+            Login
+        </div>
+        <div class="card-body">
+            <form method="POST" action="{% url 'User_Login' %}" >
+                {% csrf_token %}
+                <div class="mb-3">
+                    <input type="text" class="form-control mb-2" name="username" placeholder="Username">
+                    <input type="password" class="form-control" name="password" placeholder="Password">
+                </div>
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-outline-success">Sign in</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

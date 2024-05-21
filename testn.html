@@ -1,0 +1,894 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<META HTTP-EQUIV="Expires" CONTENT="Fri, Jan 01 1900 00:00:00 GMT">
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+<META HTTP-EQUIV="Cache-Control" CONTENT="no-cache">
+<META http-equiv="Content-Type" content="text/html; charset=iso-8809-1">
+<META http-equiv="content-language" content="en">
+<META name="author" content="">
+<META HTTP-EQUIV="Reply-to" CONTENT="@.com">
+<META name="generator" content="Microsoft FrontPage 4.0">
+<META NAME="description" CONTENT="">
+<META name="keywords" content="">
+<META NAME="Creation_Date" CONTENT="08/15/2000">
+<META name="revisit-after" content="15 days">
+<META HTTP-EQUIV="Refresh" CONTENT="30">
+<title>ROTATIONS - ARRIVALS</title>
+<!-- link rel="stylesheet" type="text/css" href="my.css" !-->
+</head>
+
+
+<script language="javascript">
+
+function tick() {
+  var hours, minutes, seconds, ap;
+  var intHours, intMinutes, intSeconds;
+  var today;
+
+  today = new Date();
+
+  hours = today.getHours();
+  intMinutes = today.getMinutes();
+
+  if (intMinutes < 10) {
+     minutes = "0"+intMinutes;
+  } else {
+     minutes = intMinutes;
+  }
+
+  timeString = hours + ":" + minutes;
+  Clock.innerHTML = timeString;
+
+  window.setTimeout("tick();", 5000);
+}
+
+
+function global(){
+  tick();
+ 
+  numcols = 21;
+  numlines = 25; 
+  cells_before_remarks = 8;
+  cells_after_remarks = 13;
+
+  cell_before_bonbof = 17;
+  cell_after_bonbof = 3;
+
+  cell_before_redtime = 18;
+  cell_after_redtime = 2;
+
+  cell_before_bonbofdep = 19;
+  cell_after_bonbofdep = 1;
+  
+  mins_to_eta_cell_index = 22;
+
+  llmax_arr_notes = 12;
+  llmax_arr_rampagt = 20;
+
+
+  for (i=1; i < numlines+2; i++) 
+  {
+    t1.rows[i-1].cells[cell_before_bonbof+1].style.visibility = 'hidden';
+    t1.rows[i-1].cells[cell_before_redtime+1].style.visibility = 'hidden';
+    t1.rows[i-1].cells[cell_before_bonbofdep+1].style.visibility = 'hidden';
+    t1.rows[i-1].cells[mins_to_eta_cell_index].style.visibility = 'hidden';
+
+  //  t1.cells((cell_before_bonbof+1)*i + (cell_after_bonbof*(i-1))).style.visibility = 'hidden';
+  // t1.cells((cell_before_redtime+1)*i + (cell_after_redtime*(i-1))).style.visibility = 'hidden';
+  //  t1.cells((cell_before_bonbofdep+1)*i + (cell_after_bonbofdep*(i-1))).style.visibility = 'hidden';
+  } 
+
+
+  for (cc=0; cc < numlines; cc++) 
+  {
+
+    //idx_cell = numcols - 1 + ((cells_before_remarks+1)*(cc+1)) + (cc*cells_after_remarks);
+    idx_cell = t1.rows[cc].cells[cells_before_remarks+1];
+
+    //alert(idx_cell);  
+    //remarks_cell = t1.cells(idx_cell);
+    remarks_cell = t1.rows[cc+1].cells[cells_before_remarks];
+    //rem = remarks_cell.all("remarks").innerHTML; 
+    rem = remarks_cell.firstChild.innerHTML
+    //alert(rem);
+ 
+    // CELLE BON-BOF
+    // idx_bonbof = numcols - 1 + ((cell_before_bonbof+1)*(cc+1)) + (cc*cell_after_bonbof);
+    bonbof_cell = t1.rows[cc+1].cells[cell_before_bonbof+1];
+    //bonbof_cell = t1.cells(idx_bonbof+1);
+    bonbof_value = bonbof_cell.firstChild.innerHTML;
+    //bonbof_value = bonbof_cell.all("bonbof").innerHTML;
+
+    // CELLE RED TIME
+    // idx_redtime = numcols - 1 + ((cell_before_redtime+1)*(cc+1)) + (cc*cell_after_redtime);
+  redtime_cell = t1.rows[cc+1].cells[cell_before_redtime+1];
+    //redtime_cell = t1.cells(idx_redtime+1);
+    redtime_value = redtime_cell.firstChild.innerHTML;
+    //redtime_value = redtime_cell.all("redtime").innerHTML;
+    // CELLE BON-BOF DEP
+    //idx_bonbofdep = numcols - 1 + ((cell_before_bonbofdep+1)*(cc+1)) + (cc*cell_after_bonbofdep);
+  bonbofdep_cell = t1.rows[cc+1].cells[cell_before_bonbofdep+1];
+    //bonbofdep_cell = t1.cells(idx_bonbofdep+1);
+    // bonbofdep_value = bonbofdep_cell.all("bonbofdep").innerHTML;
+    bonbofdep_value = bonbofdep_cell.firstChild.innerHTML;
+    mins_to_eta_cell = t1.rows[cc+1].cells[mins_to_eta_cell_index];
+    mins_to_eta_value = mins_to_eta_cell.firstChild.innerHTML;
+    
+    if ((bonbof_value.search('__@@__') == -1) || (redtime_value.search('__@@__') == -1))
+    {
+      // ESEGUO SOLO SE NON C'E' IL BON/BOF DELLA PARTENZA
+      
+      if ((bonbofdep_value.search('&nbsp') != -1))
+      {
+        // BON-BOF senza RED TIME
+        if ((bonbof_value.search('&nbsp') == -1) && (redtime_value.search('&nbsp') != -1))
+        {
+          for (i=0; i<numcols; i++)
+          {
+            
+            bonbof_cell= t1.rows[cc+1].cells[i];
+            bonbof_cell.bgColor = 'red';
+          }
+        }
+        // BON-BOF e RED TIME
+        if ((bonbof_value.search('&nbsp') == -1) && (redtime_value.search('&nbsp') == -1))
+        {
+          for (i=1; i<numcols; i++)
+          {
+            bonbof_cell= t1.rows[cc+1].cells[i];
+            bonbof_cell.bgColor = 'red';
+          }
+        }
+        if ((bonbof_value.search('&nbsp') != -1))
+        {
+            text_color = "#ffffff";
+            if(mins_to_eta_value < 10)
+            {
+                text_color = "#ffa500";
+            }
+            else if (mins_to_eta_value < 25)
+            {
+                text_color = "#ff0000";
+            }
+            myrow = "riga" + (cc+1);
+            var testo = document.getElementById(myrow);
+            testo.style.color = text_color;
+        }
+        // RED TIME e senza BON-BOF
+        /*
+        if ((bonbof_value.search('&nbsp') != -1) && (redtime_value.search('&nbsp') == -1))
+        {
+          myrow = "riga" + (cc+1);
+    var testo = document.getElementById(myrow);
+          testo.style.color = "#ff0000";
+        }
+        */
+      }
+      else
+      {
+          myrow = "riga" + (cc+1);
+    var testo = document.getElementById(myrow);
+          testo.style.color = '#00ff00';
+      }
+    }
+    /*splitString = rem.split(";");
+    if (splitString.length > 1) { // le note arrivi contengono almeno un ";"
+      //alert(splitString[0]);
+      //alert(splitString[1]);
+
+      rampagt_cell = t1.rows[cc+1].cells[cells_before_remarks+2];
+      ramp = rampagt_cell.firstChild.innerHTML; 
+      //alert(ramp);
+
+      if (splitString[0].length > 0) {
+      //  rem = splitString[0].substr(0,llmax_arr_notes);
+      //  remarks_cell.firstChild.innerHTML = "<nobr>" + rem + "</nobr>";
+	  // tolto il <nobr> e il limite della lunghezza come da ticket 2981
+	  if (remarks_cell.firstChild.innerHTML.substr(1,7 )=="marquee" ){
+	  remarks_cell.firstChild.innerHTML =  splitString[0].concat("</marquee>") ;
+	  } 
+	  else 
+	  {remarks_cell.firstChild.innerHTML =  splitString[0]}
+	  
+      }
+      else
+        remarks_cell.firstChild.innerHTML = "&nbsp;";
+      if (splitString[1].length > 0) {
+        ramp = splitString[1] .substr(0,llmax_arr_rampagt); 
+        rampagt_cell.firstChild.innerHTML = "<nobr>" + ramp + "</nobr>";
+      }
+      else 
+        rampagt_cell.firstChild.innerHTML = "&nbsp;";
+    }
+    else { // le note arrivi non contegono nessun ";"
+      // rem1 = rem.replace("<","&lt;");
+      // rem2 = rem1.replace(">","&gt;");
+      //rem = rem.substr(0,llmax_arr_notes);
+      //remarks_cell.firstChild.innerHTML = "<nobr>" + rem + "</nobr>"; // unescape(escape("&lt;pippo&gt;"));
+	  // tolto il <nobr> e il limite della lunghezza come da ticket 2981
+	   remarks_cell.firstChild.innerHTML =  splitString[0] ;
+    }*/
+  }
+}
+
+</script>
+
+
+
+<body topmargin="0" leftmargin="0" onload="global();" style="overflow: hidden; margin: 0; padding: 0" bgcolor="#000099">
+
+<table border="0" cellpadding="0" cellspacing="0" width="1920" height="60"
+    id="t3">
+  <tr style="font-family: Verdana; font-size: 22pt; color: rgb(225,225,50);
+       font-weight: bold">
+    <td width="492" bordercolor="#FF0000" align="center">
+      <p align="center">ARRIVALS</p>
+    </td>
+    <td width="300" bordercolor="#FF0000" align="center">
+      <p align="center">ROTATIONS</p>
+    </td>
+    <td width="102" bordercolor="#FF0000" align="center">
+      <p id="Clock" align="center">&nbsp;</p>
+    </td>
+    <td width="620" bordercolor="#FF0000" align="center">
+      DEPARTURES
+    </td>
+  </tr>
+</table>
+
+<table border="1" cellpadding="0" cellspacing="0" 
+style="border: medium none normal" width="10000" id="t1">
+  <tr style="font-family: Arial; font-size: 14pt; color: rgb(225,225,80); font-weight: bold; font-style: italic">
+    <td height="30" bordercolor="#C0C0C0" width="1"></td>
+    <td height="30" width="60"  align="left" bordercolor="#C0C0C0"><font face="Courier New" size="6">Stand</font></td>
+    <td height="30" width="110"  align="left" bordercolor="#C0C0C0"><font face="Courier New" size="6">AC/Reg</font></td>
+    <td height="30" width="160"  align="left" bordercolor="#C0C0C0"><font face="Courier New" size="6">Flight</font></td>
+    <td height="30" width="84"  align="left" bordercolor="#C0C0C0"><font face="Courier New" size="6">Orig</font></td>
+	<td height="30" width="46"  align="left" bordercolor="#C0C0C0"><font face="Courier New" size="6">FM</font></td>
+    <td height="30" width="120"  align="left" bordercolor="#C0C0C0"><font face="Courier New" size="6">STA</font></td>
+    <td height="30" width="120"  align="left" bordercolor="#C0C0C0"><font face="Courier New" size="6">ETA</font></td>
+    <td height="30" width="160" align="left" bordercolor="#C0C0C0"><font face="Courier New" size="6">Notes</font></td>
+	<td height="30" width="36" align="left" bordercolor="#C0C0C0"><font face="Courier New" size="6">S</font></td>
+    <td height="30" width="180"  align="left" bordercolor="#C0C0C0"><font face="Courier New" size="6"><nobr>Ramp agt</nobr></font></td>
+    <td height="30" width="160"  align="left" bordercolor="#C0C0C0"><font face="Courier New" size="6">Flight</font></td>
+    <td height="30" width="84"  align="left" bordercolor="#C0C0C0"><font face="Courier New" size="6">Dest</font></td>
+	<td height="30" width="46"  align="left" bordercolor="#C0C0C0"><font face="Courier New" size="6">GATE</font></td>
+    <td height="30" width="120"  align="left" bordercolor="#C0C0C0"><font face="Courier New" size="6">STD</font></td>
+    <td height="30" width="120"  align="left" bordercolor="#C0C0C0"><font face="Courier New" size="6">ETD</font></td>
+    <td height="30" width="120"  align="left" bordercolor="#C0C0C0"><font face="Courier New" size="6">SLOT-Z</font></td>
+    <td height="30" width="180" align="left" bordercolor="#C0C0C0"><font face="Courier New" size="6">Notes</font></td>
+    <td height="30" width="0"  align="left" bordercolor="#C0C0C0"><font face="Courier New" size="6">BON/BOF</font></td>
+    <td height="30" width="0"  align="left" bordercolor="#C0C0C0"><font face="Courier New" size="6">RED</font></td>
+    <td height="30" width="0"  align="left" bordercolor="#C0C0C0"><font face="Courier New" size="6">BON/BOF</font></td>
+    <td height="30" width="0"  align="left" bordercolor="#C0C0C0"><font face="Courier New" size="6">TO ETA</font></td>
+	<td height="30" width="46"  align="left" bordercolor="#C0C0C0"><font face="Courier New" size="6">TO</font></td>
+  </tr>
+  <tr id="riga1" style="font-family: Arial; font-size: 14pt; color: rgb(225,225,255); font-weight: bold">   
+    <td height="30" bordercolor="#C0C0C0" width="1"></td>
+    <td height="30" width="60"  align="left"><font face="Courier New" size="6">N819</font></td>                     
+    <td height="30" width="110"  align="left"><font face="Courier New" size="6">HAKAZ</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>FRF 121</nobr></font></td>
+    <td height="30" width="84"  align="left"><font face="Courier New" size="6">WRO</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">N</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6">15:50</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">17:11</font></td>
+    <td height="30" width="160" align="left"><font id="remarks" face="Courier New" size="5">&nbsp;</font></td>
+    <td height="30" width="36"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="180"  align="left"><font id="rampagt" face="Courier New" size="5">&nbsp;</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>FRF 120</nobr></font></td>
+	<td height="30" width="84"  align="left"><font face="Courier New" size="6">BRQ</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">08:30</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6">F/F</font></td>		
+    <td height="30" width="180" align="left"><font id="remarks" face="Courier New" size="5">17:12</font></td>
+    <td height="30" width="0" align="left"><font id="bonbof" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="redtime" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="bonbofdep" face="Courier New" size="6">N</font></td>
+    <td height="30" width="0" align="left"><font id="mins_to_eta" face="Courier New" size="6">-91</font></td>
+  </tr>
+  <tr id="riga2" style="font-family: Arial; font-size: 14pt; color: rgb(225,225,255); font-weight: bold">   
+   <td height="30" bordercolor="#C0C0C0" width="1"></td>
+    <td height="30" width="60"  align="left"><font face="Courier New" size="6">S403</font></td>
+    <td height="30" width="110"  align="left"><font face="Courier New" size="6">EIIFW</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>FR 8845</nobr></font></td>
+    <td height="30" width="84"  align="left"><font face="Courier New" size="6">WRO</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">N</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6">16:15</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">16:22</font></td>
+    <td height="30" width="160" align="left"><font id="remarks" face="Courier New" size="5"><marquee behavior="scroll" scrollamount="8" scrolldelay="100">P177 B43  *CGO2kgsH1*</marquee></font></td>
+    <td height="30" width="36"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="180"  align="left"><font id="rampagt" face="Courier New" size="5">MAFFIULETTI</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>FR 3772</nobr></font></td>
+	<td height="30" width="84"  align="left"><font face="Courier New" size="6">OTP</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">B6</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">18:35</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">18:30</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6">BP37  #766</font></td>		
+    <td height="30" width="180" align="left"><font id="remarks" face="Courier New" size="5">17:55</font></td>
+    <td height="30" width="0" align="left"><font id="bonbof" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="redtime" face="Courier New" size="6">18:29</font></td>
+    <td height="30" width="0" align="left"><font id="bonbofdep" face="Courier New" size="6">E</font></td>
+    <td height="30" width="0" align="left"><font id="mins_to_eta" face="Courier New" size="6">-140</font></td>
+  </tr>
+  <tr id="riga3" style="font-family: Arial; font-size: 14pt; color: rgb(225,225,255); font-weight: bold">   
+    <td height="30" bordercolor="#C0C0C0" width="1"></td>
+    <td height="30" width="60"  align="left"><font face="Courier New" size="6">N804</font></td>
+    <td height="30" width="110"  align="left"><font face="Courier New" size="6">MABRB</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>FR 04H</nobr></font></td>
+    <td height="30" width="84"  align="left"><font face="Courier New" size="6">LIS</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">N</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6">16:30</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">18:42</font></td>
+    <td height="30" width="160" align="left"><font id="remarks" face="Courier New" size="5">&nbsp;</font></td>
+    <td height="30" width="36"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="180"  align="left"><font id="rampagt" face="Courier New" size="5">VILLA</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>&nbsp;</nobr></font></td>
+	<td height="30" width="84"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>		
+    <td height="30" width="180" align="left"><font id="remarks" face="Courier New" size="5">18:39</font></td>
+    <td height="30" width="0" align="left"><font id="bonbof" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="redtime" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="bonbofdep" face="Courier New" size="6">E</font></td>
+    <td height="30" width="0" align="left"><font id="mins_to_eta" face="Courier New" size="6">0</font></td>
+  </tr>
+  <tr id="riga4" style="font-family: Arial; font-size: 14pt; color: rgb(225,225,255); font-weight: bold">   
+    <td height="30" bordercolor="#C0C0C0" width="1"></td>
+    <td height="30" width="60"  align="left"><font face="Courier New" size="6">S206</font></td>
+    <td height="30" width="110"  align="left"><font face="Courier New" size="6">EIEBZ</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>FR 094</nobr></font></td>
+    <td height="30" width="84"  align="left"><font face="Courier New" size="6">PSA</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">N</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6">16:40</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">17:40</font></td>
+    <td height="30" width="160" align="left"><font id="remarks" face="Courier New" size="5">F/F#709</font></td>
+    <td height="30" width="36"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="180"  align="left"><font id="rampagt" face="Courier New" size="5">MOTOC</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>FR 4475</nobr></font></td>
+	<td height="30" width="84"  align="left"><font face="Courier New" size="6">CRL</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">A10</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">16:15</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">18:25</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">18:02</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6"><marquee behavior="scroll" scrollamount="8" scrolldelay="100"> BP35  SWP / CGO 1/1kg+CGO 1/2KGS#709</marquee></font></td>		
+    <td height="30" width="180" align="left"><font id="remarks" face="Courier New" size="5">17:38</font></td>
+    <td height="30" width="0" align="left"><font id="bonbof" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="redtime" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="bonbofdep" face="Courier New" size="6">N</font></td>
+    <td height="30" width="0" align="left"><font id="mins_to_eta" face="Courier New" size="6">-62</font></td>
+  </tr>
+  <tr id="riga5" style="font-family: Arial; font-size: 14pt; color: rgb(225,225,255); font-weight: bold">   
+    <td height="30" bordercolor="#C0C0C0" width="1"></td>
+    <td height="30" width="60"  align="left"><font face="Courier New" size="6">S401</font></td>
+    <td height="30" width="110"  align="left"><font face="Courier New" size="6">9HQDK</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>FR 3439</nobr></font></td>
+    <td height="30" width="84"  align="left"><font face="Courier New" size="6">SUF</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">N</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6">17:30</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">17:38</font></td>
+    <td height="30" width="160" align="left"><font id="remarks" face="Courier New" size="5"><marquee behavior="scroll" scrollamount="8" scrolldelay="100">P172 B15  CGO 5KG IN H1#377</marquee></font></td>
+    <td height="30" width="36"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="180"  align="left"><font id="rampagt" face="Courier New" size="5">MOTOC</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>FR 1319</nobr></font></td>
+	<td height="30" width="84"  align="left"><font face="Courier New" size="6">ATH</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">A9</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">19:15</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">18:57</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6">BP32  #709</font></td>		
+    <td height="30" width="180" align="left"><font id="remarks" face="Courier New" size="5">17:35</font></td>
+    <td height="30" width="0" align="left"><font id="bonbof" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="redtime" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="bonbofdep" face="Courier New" size="6">N</font></td>
+    <td height="30" width="0" align="left"><font id="mins_to_eta" face="Courier New" size="6">-64</font></td>
+  </tr>
+  <tr id="riga6" style="font-family: Arial; font-size: 14pt; color: rgb(225,225,255); font-weight: bold">   
+    <td height="30" bordercolor="#C0C0C0" width="1"></td>
+    <td height="30" width="60"  align="left"><font face="Courier New" size="6">S202</font></td>
+    <td height="30" width="110"  align="left"><font face="Courier New" size="6">SPRSG</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>FR 3279</nobr></font></td>
+    <td height="30" width="84"  align="left"><font face="Courier New" size="6">GDN</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">N</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6">17:40</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">17:42</font></td>
+    <td height="30" width="160" align="left"><font id="remarks" face="Courier New" size="5"><marquee behavior="scroll" scrollamount="8" scrolldelay="100">P178 B30  #477</marquee></font></td>
+    <td height="30" width="36"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="180"  align="left"><font id="rampagt" face="Courier New" size="5">LEO</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>FR 3280</nobr></font></td>
+	<td height="30" width="84"  align="left"><font face="Courier New" size="6">GDN</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">A2</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">18:05</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">18:15</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6"><marquee behavior="scroll" scrollamount="8" scrolldelay="100"> BP52 WCHR1 #477</marquee></font></td>		
+    <td height="30" width="180" align="left"><font id="remarks" face="Courier New" size="5">17:40</font></td>
+    <td height="30" width="0" align="left"><font id="bonbof" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="redtime" face="Courier New" size="6">18:15</font></td>
+    <td height="30" width="0" align="left"><font id="bonbofdep" face="Courier New" size="6">N</font></td>
+    <td height="30" width="0" align="left"><font id="mins_to_eta" face="Courier New" size="6">-60</font></td>
+  </tr>
+  <tr id="riga7" style="font-family: Arial; font-size: 14pt; color: rgb(225,225,255); font-weight: bold">   
+    <td height="30" bordercolor="#C0C0C0" width="1"></td>
+    <td height="30" width="60"  align="left"><font face="Courier New" size="6">S109</font></td>
+    <td height="30" width="110"  align="left"><font face="Courier New" size="6">9HVUI</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>FR 3507</nobr></font></td>
+    <td height="30" width="84"  align="left"><font face="Courier New" size="6">ALC</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">N</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6">18:10</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">18:15</font></td>
+    <td height="30" width="160" align="left"><font id="remarks" face="Courier New" size="5"><marquee behavior="scroll" scrollamount="8" scrolldelay="100">P176 B42 WCHC3 #061</marquee></font></td>
+    <td height="30" width="36"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="180"  align="left"><font id="rampagt" face="Courier New" size="5">*TATI*</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>FR 2087</nobr></font></td>
+	<td height="30" width="84"  align="left"><font face="Courier New" size="6">LIS</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">A5</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">19:00</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">19:00</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">18:12</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6"><marquee behavior="scroll" scrollamount="8" scrolldelay="100"> BP31  CGO 1/2KGS//HOT TURN#061</marquee></font></td>		
+    <td height="30" width="180" align="left"><font id="remarks" face="Courier New" size="5">18:14</font></td>
+    <td height="30" width="0" align="left"><font id="bonbof" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="redtime" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="bonbofdep" face="Courier New" size="6">N</font></td>
+    <td height="30" width="0" align="left"><font id="mins_to_eta" face="Courier New" size="6">-27</font></td>
+  </tr>
+  <tr id="riga8" style="font-family: Arial; font-size: 14pt; color: rgb(225,225,255); font-weight: bold">   
+    <td height="30" bordercolor="#C0C0C0" width="1"></td>
+    <td height="30" width="60"  align="left"><font face="Courier New" size="6">S301</font></td>
+    <td height="30" width="110"  align="left"><font face="Courier New" size="6">9HQAM</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>FR 3674</nobr></font></td>
+    <td height="30" width="84"  align="left"><font face="Courier New" size="6">STN</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">E</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6">18:10</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">18:09</font></td>
+    <td height="30" width="160" align="left"><font id="remarks" face="Courier New" size="5"><marquee behavior="scroll" scrollamount="8" scrolldelay="100">P170 B24 DEAF1,WCHC1 1 EMA IN H1</marquee></font></td>
+    <td height="30" width="36"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="180"  align="left"><font id="rampagt" face="Courier New" size="5">ADINA</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>FR 5655</nobr></font></td>
+	<td height="30" width="84"  align="left"><font face="Courier New" size="6">PMI</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">A15</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">18:35</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">18:36</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6"><marquee behavior="scroll" scrollamount="8" scrolldelay="100"> BP34  DGR 5/25KGS#628</marquee></font></td>		
+    <td height="30" width="180" align="left"><font id="remarks" face="Courier New" size="5">18:08</font></td>
+    <td height="30" width="0" align="left"><font id="bonbof" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="redtime" face="Courier New" size="6">18:41</font></td>
+    <td height="30" width="0" align="left"><font id="bonbofdep" face="Courier New" size="6">N</font></td>
+    <td height="30" width="0" align="left"><font id="mins_to_eta" face="Courier New" size="6">-33</font></td>
+  </tr>
+  <tr id="riga9" style="font-family: Arial; font-size: 14pt; color: rgb(225,225,255); font-weight: bold">   
+   <td height="30" bordercolor="#C0C0C0" width="1"></td>
+    <td height="30" width="60"  align="left"><font face="Courier New" size="6">S207</font></td>
+    <td height="30" width="110"  align="left"><font face="Courier New" size="6">9HQBN</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>FR 4680</nobr></font></td>
+    <td height="30" width="84"  align="left"><font face="Courier New" size="6">ARN</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">N</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6">18:15</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">18:06</font></td>
+    <td height="30" width="160" align="left"><font id="remarks" face="Courier New" size="5"><marquee behavior="scroll" scrollamount="8" scrolldelay="100">P173 B21  COMAIL8kgsH1*#007</marquee></font></td>
+    <td height="30" width="36"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="180"  align="left"><font id="rampagt" face="Courier New" size="5">CRISTIANI</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>FR 4681</nobr></font></td>
+	<td height="30" width="84"  align="left"><font face="Courier New" size="6">ARN</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">A12</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">18:40</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">18:46</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">18:07</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6">BP92  #007</font></td>		
+    <td height="30" width="180" align="left"><font id="remarks" face="Courier New" size="5">18:09</font></td>
+    <td height="30" width="0" align="left"><font id="bonbof" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="redtime" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="bonbofdep" face="Courier New" size="6">N</font></td>
+    <td height="30" width="0" align="left"><font id="mins_to_eta" face="Courier New" size="6">-36</font></td>
+  </tr>
+  <tr id="riga10" style="font-family: Arial; font-size: 14pt; color: rgb(225,225,255); font-weight: bold">   
+   <td height="30" bordercolor="#C0C0C0" width="1"></td>
+    <td height="30" width="60"  align="left"><font face="Courier New" size="6">S201</font></td>
+    <td height="30" width="110"  align="left"><font face="Courier New" size="6">9HQEG</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>FR 5550</nobr></font></td>
+    <td height="30" width="84"  align="left"><font face="Courier New" size="6">CGN</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">N</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6">18:15</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">18:19</font></td>
+    <td height="30" width="160" align="left"><font id="remarks" face="Courier New" size="5"><marquee behavior="scroll" scrollamount="8" scrolldelay="100">P183 B15  CGO H1#014</marquee></font></td>
+    <td height="30" width="36"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="180"  align="left"><font id="rampagt" face="Courier New" size="5">**ENRI A**</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>FR 5551</nobr></font></td>
+	<td height="30" width="84"  align="left"><font face="Courier New" size="6">CGN</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">A1</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">18:40</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">18:45</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6">BP18  #014</font></td>		
+    <td height="30" width="180" align="left"><font id="remarks" face="Courier New" size="5">18:17</font></td>
+    <td height="30" width="0" align="left"><font id="bonbof" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="redtime" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="bonbofdep" face="Courier New" size="6">N</font></td>
+    <td height="30" width="0" align="left"><font id="mins_to_eta" face="Courier New" size="6">-23</font></td>
+  </tr>
+  <tr id="riga11" style="font-family: Arial; font-size: 14pt; color: rgb(225,225,255); font-weight: bold">   
+   <td height="30" bordercolor="#C0C0C0" width="1"></td>
+    <td height="30" width="60"  align="left"><font face="Courier New" size="6">S211</font></td>
+    <td height="30" width="110"  align="left"><font face="Courier New" size="6">GRUKC</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>RK 3646</nobr></font></td>
+    <td height="30" width="84"  align="left"><font face="Courier New" size="6">EDI</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">E</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6">18:20</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">18:31</font></td>
+    <td height="30" width="160" align="left"><font id="remarks" face="Courier New" size="5"><marquee behavior="scroll" scrollamount="8" scrolldelay="100">P166 B15 WCHR1 </marquee></font></td>
+    <td height="30" width="36"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="180"  align="left"><font id="rampagt" face="Courier New" size="5">GRAZIAN</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>RK 3645</nobr></font></td>
+	<td height="30" width="84"  align="left"><font face="Courier New" size="6">EDI</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">B2</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">18:45</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">18:58</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6"><marquee behavior="scroll" scrollamount="8" scrolldelay="100"> BP18 WCHS1 #009</marquee></font></td>		
+    <td height="30" width="180" align="left"><font id="remarks" face="Courier New" size="5">18:30</font></td>
+    <td height="30" width="0" align="left"><font id="bonbof" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="redtime" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="bonbofdep" face="Courier New" size="6">E</font></td>
+    <td height="30" width="0" align="left"><font id="mins_to_eta" face="Courier New" size="6">-11</font></td>
+  </tr>
+  <tr id="riga12" style="font-family: Arial; font-size: 14pt; color: rgb(225,225,255); font-weight: bold">   
+   <td height="30" bordercolor="#C0C0C0" width="1"></td>
+    <td height="30" width="60"  align="left"><font face="Courier New" size="6">S107</font></td>
+    <td height="30" width="110"  align="left"><font face="Courier New" size="6">9HQAO</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>FR 4764</nobr></font></td>
+    <td height="30" width="84"  align="left"><font face="Courier New" size="6">TLL</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">N</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6">18:40</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">18:35</font></td>
+    <td height="30" width="160" align="left"><font id="remarks" face="Courier New" size="5"><marquee behavior="scroll" scrollamount="8" scrolldelay="100">P168 B79  #012</marquee></font></td>
+    <td height="30" width="36"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="180"  align="left"><font id="rampagt" face="Courier New" size="5">SCABBIA</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>FR 6304</nobr></font></td>
+	<td height="30" width="84"  align="left"><font face="Courier New" size="6">BCN</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">A13</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">19:45</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">19:45</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6"><marquee behavior="scroll" scrollamount="8" scrolldelay="100"> BP6  HOT TURN#012</marquee></font></td>		
+    <td height="30" width="180" align="left"><font id="remarks" face="Courier New" size="5">18:33</font></td>
+    <td height="30" width="0" align="left"><font id="bonbof" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="redtime" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="bonbofdep" face="Courier New" size="6">N</font></td>
+    <td height="30" width="0" align="left"><font id="mins_to_eta" face="Courier New" size="6">-7</font></td>
+  </tr>
+  <tr id="riga13" style="font-family: Arial; font-size: 14pt; color: rgb(225,225,255); font-weight: bold">   
+   <td height="30" bordercolor="#C0C0C0" width="1"></td>
+    <td height="30" width="60"  align="left"><font face="Courier New" size="6">S103</font></td>
+    <td height="30" width="110"  align="left"><font face="Courier New" size="6">9HPET</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>XZ 9014</nobr></font></td>
+    <td height="30" width="84"  align="left"><font face="Courier New" size="6">BZO</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">N</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6">18:40</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">18:13</font></td>
+    <td height="30" width="160" align="left"><font id="remarks" face="Courier New" size="5">F/F#791</font></td>
+    <td height="30" width="36"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="180"  align="left"><font id="rampagt" face="Courier New" size="5">NICOLO</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>XZ 2014</nobr></font></td>
+	<td height="30" width="84"  align="left"><font face="Courier New" size="6">FCO</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">A3</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">19:20</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">19:20</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6">#791</font></td>		
+    <td height="30" width="180" align="left"><font id="remarks" face="Courier New" size="5">18:10</font></td>
+    <td height="30" width="0" align="left"><font id="bonbof" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="redtime" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="bonbofdep" face="Courier New" size="6">N</font></td>
+    <td height="30" width="0" align="left"><font id="mins_to_eta" face="Courier New" size="6">-29</font></td>
+  </tr>
+  <tr id="riga14" style="font-family: Arial; font-size: 14pt; color: rgb(225,225,255); font-weight: bold">   
+   <td height="30" bordercolor="#C0C0C0" width="1"></td>
+    <td height="30" width="60"  align="left"><font face="Courier New" size="6">S404</font></td>
+    <td height="30" width="110"  align="left"><font face="Courier New" size="6">9HQAY</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>FR 4131</nobr></font></td>
+    <td height="30" width="84"  align="left"><font face="Courier New" size="6">BRI</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">N</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6">18:45</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">21:00</font></td>
+    <td height="30" width="160" align="left"><font id="remarks" face="Courier New" size="5">WCHS1 ???</font></td>
+    <td height="30" width="36"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="180"  align="left"><font id="rampagt" face="Courier New" size="5">&nbsp;</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>&nbsp;</nobr></font></td>
+	<td height="30" width="84"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>		
+    <td height="30" width="180" align="left"><font id="remarks" face="Courier New" size="5">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="bonbof" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="redtime" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="bonbofdep" face="Courier New" size="6">E</font></td>
+    <td height="30" width="0" align="left"><font id="mins_to_eta" face="Courier New" size="6">138</font></td>
+  </tr>
+  <tr id="riga15" style="font-family: Arial; font-size: 14pt; color: rgb(225,225,255); font-weight: bold">   
+   <td height="30" bordercolor="#C0C0C0" width="1"></td>
+    <td height="30" width="60"  align="left"><font face="Courier New" size="6">S210</font></td>
+    <td height="30" width="110"  align="left"><font face="Courier New" size="6">9HQBD</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>FR 6174</nobr></font></td>
+    <td height="30" width="84"  align="left"><font face="Courier New" size="6">CTA</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">N</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6">18:50</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">18:59</font></td>
+    <td height="30" width="160" align="left"><font id="remarks" face="Courier New" size="5"><marquee behavior="scroll" scrollamount="8" scrolldelay="100">P178 B12  #610</marquee></font></td>
+    <td height="30" width="36"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="180"  align="left"><font id="rampagt" face="Courier New" size="5">GOLD</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>FR 4188</nobr></font></td>
+	<td height="30" width="84"  align="left"><font face="Courier New" size="6">STN</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">B4</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">19:15</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">19:30</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6"><marquee behavior="scroll" scrollamount="8" scrolldelay="100"> BP30 WCHS1 TOILET RQST#610</marquee></font></td>		
+    <td height="30" width="180" align="left"><font id="remarks" face="Courier New" size="5">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="bonbof" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="redtime" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="bonbofdep" face="Courier New" size="6">E</font></td>
+    <td height="30" width="0" align="left"><font id="mins_to_eta" face="Courier New" size="6">17</font></td>
+  </tr>
+  <tr id="riga16" style="font-family: Arial; font-size: 14pt; color: rgb(225,225,255); font-weight: bold">   
+   <td height="30" bordercolor="#C0C0C0" width="1"></td>
+    <td height="30" width="60"  align="left"><font face="Courier New" size="6">S203</font></td>
+    <td height="30" width="110"  align="left"><font face="Courier New" size="6">9HQCM</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>FR 1785</nobr></font></td>
+    <td height="30" width="84"  align="left"><font face="Courier New" size="6">CPH</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">N</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6">19:05</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">19:10</font></td>
+    <td height="30" width="160" align="left"><font id="remarks" face="Courier New" size="5"><marquee behavior="scroll" scrollamount="8" scrolldelay="100">P178 B22 DUMB1,WCHC1 1WCHC+1COMAIL</marquee></font></td>
+    <td height="30" width="36"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="180"  align="left"><font id="rampagt" face="Courier New" size="5">SIM</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>FR 7324</nobr></font></td>
+	<td height="30" width="84"  align="left"><font face="Courier New" size="6">MLA</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">A4</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">19:30</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">20:05</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6"><marquee behavior="scroll" scrollamount="8" scrolldelay="100"> BP41  CGO 1/1 KG</marquee></font></td>		
+    <td height="30" width="180" align="left"><font id="remarks" face="Courier New" size="5">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="bonbof" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="redtime" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="bonbofdep" face="Courier New" size="6">N</font></td>
+    <td height="30" width="0" align="left"><font id="mins_to_eta" face="Courier New" size="6">28</font></td>
+  </tr>
+  <tr id="riga17" style="font-family: Arial; font-size: 14pt; color: rgb(225,225,255); font-weight: bold">   
+   <td height="30" bordercolor="#C0C0C0" width="1"></td>
+    <td height="30" width="60"  align="left"><font face="Courier New" size="6">S2081</font></td>
+    <td height="30" width="110"  align="left"><font face="Courier New" size="6">9HQDR</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>FR 3538</nobr></font></td>
+    <td height="30" width="84"  align="left"><font face="Courier New" size="6">EIN</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">N</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6">19:25</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">19:34</font></td>
+    <td height="30" width="160" align="left"><font id="remarks" face="Courier New" size="5">P180 B9</font></td>
+    <td height="30" width="36"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="180"  align="left"><font id="rampagt" face="Courier New" size="5">FRA M</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>FR 6651</nobr></font></td>
+	<td height="30" width="84"  align="left"><font face="Courier New" size="6">CTA</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">A14</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">19:50</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">20:02</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6">BP8</font></td>		
+    <td height="30" width="180" align="left"><font id="remarks" face="Courier New" size="5">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="bonbof" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="redtime" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="bonbofdep" face="Courier New" size="6">N</font></td>
+    <td height="30" width="0" align="left"><font id="mins_to_eta" face="Courier New" size="6">52</font></td>
+  </tr>
+  <tr id="riga18" style="font-family: Arial; font-size: 14pt; color: rgb(225,225,255); font-weight: bold">   
+  <td height="30" bordercolor="#C0C0C0" width="1"></td>
+    <td height="30" width="60"  align="left"><font face="Courier New" size="6">S2091</font></td>
+    <td height="30" width="110"  align="left"><font face="Courier New" size="6">PHXRX</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>HV 5003</nobr></font></td>
+    <td height="30" width="84"  align="left"><font face="Courier New" size="6">RTM</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">N</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6">19:30</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">19:37</font></td>
+    <td height="30" width="160" align="left"><font id="remarks" face="Courier New" size="5">P100 B11</font></td>
+    <td height="30" width="36"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="180"  align="left"><font id="rampagt" face="Courier New" size="5">&nbsp;</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>HV 5004</nobr></font></td>
+	<td height="30" width="84"  align="left"><font face="Courier New" size="6">RTM</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">A15</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">20:15</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">20:20</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">19:35</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6">BP11</font></td>		
+    <td height="30" width="180" align="left"><font id="remarks" face="Courier New" size="5">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="bonbof" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="redtime" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="bonbofdep" face="Courier New" size="6">N</font></td>
+    <td height="30" width="0" align="left"><font id="mins_to_eta" face="Courier New" size="6">55</font></td>
+  </tr>
+  <tr id="riga19" style="font-family: Arial; font-size: 14pt; color: rgb(225,225,255); font-weight: bold">   
+   <td height="30" bordercolor="#C0C0C0" width="1"></td>
+    <td height="30" width="60"  align="left"><font face="Courier New" size="6">S301</font></td>
+    <td height="30" width="110"  align="left"><font face="Courier New" size="6">9HFSJ</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>XZ 2120</nobr></font></td>
+    <td height="30" width="84"  align="left"><font face="Courier New" size="6">CIY</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">N</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6">19:35</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">19:50</font></td>
+    <td height="30" width="160" align="left"><font id="remarks" face="Courier New" size="5"><marquee behavior="scroll" scrollamount="8" scrolldelay="100">P123 B4 DEAF1,WCHR1 </marquee></font></td>
+    <td height="30" width="36"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="180"  align="left"><font id="rampagt" face="Courier New" size="5">FRIGENI</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>XZ 2121</nobr></font></td>
+	<td height="30" width="84"  align="left"><font face="Courier New" size="6">CIY</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">A3</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">20:35</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">20:35</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>		
+    <td height="30" width="180" align="left"><font id="remarks" face="Courier New" size="5">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="bonbof" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="redtime" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="bonbofdep" face="Courier New" size="6">N</font></td>
+    <td height="30" width="0" align="left"><font id="mins_to_eta" face="Courier New" size="6">68</font></td>
+  </tr>
+  <tr id="riga20" style="font-family: Arial; font-size: 14pt; color: rgb(225,225,255); font-weight: bold">   
+   <td height="30" bordercolor="#C0C0C0" width="1"></td>
+    <td height="30" width="60"  align="left"><font face="Courier New" size="6">S202</font></td>
+    <td height="30" width="110"  align="left"><font face="Courier New" size="6">9HVVC</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>FR 3481</nobr></font></td>
+    <td height="30" width="84"  align="left"><font face="Courier New" size="6">CAG</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">N</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6">19:45</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="160" align="left"><font id="remarks" face="Courier New" size="5">&nbsp;</font></td>
+    <td height="30" width="36"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="180"  align="left"><font id="rampagt" face="Courier New" size="5">ASMAA</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>FR 3637</nobr></font></td>
+	<td height="30" width="84"  align="left"><font face="Courier New" size="6">BDS</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">A2</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">20:10</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6">BP14</font></td>		
+    <td height="30" width="180" align="left"><font id="remarks" face="Courier New" size="5">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="bonbof" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="redtime" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="bonbofdep" face="Courier New" size="6">N</font></td>
+    <td height="30" width="0" align="left"><font id="mins_to_eta" face="Courier New" size="6">&nbsp;</font></td>
+  </tr>
+  <tr id="riga21" style="font-family: Arial; font-size: 14pt; color: rgb(225,225,255); font-weight: bold">   
+   <td height="30" bordercolor="#C0C0C0" width="1"></td>
+    <td height="30" width="60"  align="left"><font face="Courier New" size="6">S206</font></td>
+    <td height="30" width="110"  align="left"><font face="Courier New" size="6">SPRZM</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>FR 3594</nobr></font></td>
+    <td height="30" width="84"  align="left"><font face="Courier New" size="6">POZ</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">N</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6">19:45</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">20:01</font></td>
+    <td height="30" width="160" align="left"><font id="remarks" face="Courier New" size="5">P156 B29</font></td>
+    <td height="30" width="36"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="180"  align="left"><font id="rampagt" face="Courier New" size="5">ALBERTO</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>FR 3593</nobr></font></td>
+	<td height="30" width="84"  align="left"><font face="Courier New" size="6">POZ</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">A10</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">20:10</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">20:29</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6"><marquee behavior="scroll" scrollamount="8" scrolldelay="100"> BP19  3 RUSH</marquee></font></td>		
+    <td height="30" width="180" align="left"><font id="remarks" face="Courier New" size="5">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="bonbof" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="redtime" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="bonbofdep" face="Courier New" size="6">N</font></td>
+    <td height="30" width="0" align="left"><font id="mins_to_eta" face="Courier New" size="6">79</font></td>
+  </tr>
+  <tr id="riga22" style="font-family: Arial; font-size: 14pt; color: rgb(225,225,255); font-weight: bold">   
+   <td height="30" bordercolor="#C0C0C0" width="1"></td>
+    <td height="30" width="60"  align="left"><font face="Courier New" size="6">S207</font></td>
+    <td height="30" width="110"  align="left"><font face="Courier New" size="6">HALXG</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>W6 1431</nobr></font></td>
+    <td height="30" width="84"  align="left"><font face="Courier New" size="6">WAW</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">N</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6">19:45</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">19:43</font></td>
+    <td height="30" width="160" align="left"><font id="remarks" face="Courier New" size="5">P213 B42</font></td>
+    <td height="30" width="36"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="180"  align="left"><font id="rampagt" face="Courier New" size="5">&nbsp;</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>W6 1432</nobr></font></td>
+	<td height="30" width="84"  align="left"><font face="Courier New" size="6">WAW</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">A12</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">20:20</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">20:20</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6">BP41</font></td>		
+    <td height="30" width="180" align="left"><font id="remarks" face="Courier New" size="5">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="bonbof" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="redtime" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="bonbofdep" face="Courier New" size="6">N</font></td>
+    <td height="30" width="0" align="left"><font id="mins_to_eta" face="Courier New" size="6">61</font></td>
+  </tr>
+  <tr id="riga23" style="font-family: Arial; font-size: 14pt; color: rgb(225,225,255); font-weight: bold">   
+   <td height="30" bordercolor="#C0C0C0" width="1"></td>
+    <td height="30" width="60"  align="left"><font face="Courier New" size="6">S106</font></td>
+    <td height="30" width="110"  align="left"><font face="Courier New" size="6">9HQDS</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>FR 4723</nobr></font></td>
+    <td height="30" width="84"  align="left"><font face="Courier New" size="6">BLL</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">N</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6">19:50</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">20:01</font></td>
+    <td height="30" width="160" align="left"><font id="remarks" face="Courier New" size="5">P158 B26</font></td>
+    <td height="30" width="36"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="180"  align="left"><font id="rampagt" face="Courier New" size="5">&nbsp;</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>FR 4722</nobr></font></td>
+	<td height="30" width="84"  align="left"><font face="Courier New" size="6">BLL</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">A11</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">20:15</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">20:29</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">19:41</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6"><marquee behavior="scroll" scrollamount="8" scrolldelay="100"> BP30  CGO1/4KGS</marquee></font></td>		
+    <td height="30" width="180" align="left"><font id="remarks" face="Courier New" size="5">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="bonbof" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="redtime" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="bonbofdep" face="Courier New" size="6">N</font></td>
+    <td height="30" width="0" align="left"><font id="mins_to_eta" face="Courier New" size="6">79</font></td>
+  </tr>
+  <tr id="riga24" style="font-family: Arial; font-size: 14pt; color: rgb(225,225,255); font-weight: bold">   
+  <td height="30" bordercolor="#C0C0C0" width="1"></td>
+    <td height="30" width="60"  align="left"><font face="Courier New" size="6">S204</font></td>
+    <td height="30" width="110"  align="left"><font face="Courier New" size="6">9HQAI</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>FR 5983</nobr></font></td>
+    <td height="30" width="84"  align="left"><font face="Courier New" size="6">MAD</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">N</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6">19:55</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">19:55</font></td>
+    <td height="30" width="160" align="left"><font id="remarks" face="Courier New" size="5"><marquee behavior="scroll" scrollamount="8" scrolldelay="100">P178 B15 WCHR1 </marquee></font></td>
+    <td height="30" width="36"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="180"  align="left"><font id="rampagt" face="Courier New" size="5">MAFFIULETTI</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>FR 5984</nobr></font></td>
+	<td height="30" width="84"  align="left"><font face="Courier New" size="6">MAD</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">A6</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">20:20</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">20:25</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6">BP5</font></td>		
+    <td height="30" width="180" align="left"><font id="remarks" face="Courier New" size="5">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="bonbof" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="redtime" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="bonbofdep" face="Courier New" size="6">N</font></td>
+    <td height="30" width="0" align="left"><font id="mins_to_eta" face="Courier New" size="6">73</font></td>
+  </tr>
+  <tr id="riga25" style="font-family: Arial; font-size: 14pt; color: rgb(225,225,255); font-weight: bold">   
+  <td height="30" bordercolor="#C0C0C0" width="1"></td>
+    <td height="30" width="60"  align="left"><font face="Courier New" size="6">S109</font></td>
+    <td height="30" width="110"  align="left"><font face="Courier New" size="6">9HQCR</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>FR 3433</nobr></font></td>
+    <td height="30" width="84"  align="left"><font face="Courier New" size="6">BVA</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">N</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6">20:05</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">19:43</font></td>
+    <td height="30" width="160" align="left"><font id="remarks" face="Courier New" size="5">P170 B11</font></td>
+    <td height="30" width="36"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="180"  align="left"><font id="rampagt" face="Courier New" size="5">LEO</font></td>
+    <td height="30" width="160"  align="left"><font face="Courier New" size="6"><nobr>FR 4706</nobr></font></td>
+	<td height="30" width="84"  align="left"><font face="Courier New" size="6">CAG</font></td>
+    <td height="30" width="46"  align="left"><font face="Courier New" size="6">A5</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">20:30</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">20:30</font></td>
+    <td height="30" width="120"  align="left"><font face="Courier New" size="6">&nbsp;</font></td>
+	<td height="30" width="120"  align="left"><font face="Courier New" size="6">BP14</font></td>		
+    <td height="30" width="180" align="left"><font id="remarks" face="Courier New" size="5">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="bonbof" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="redtime" face="Courier New" size="6">&nbsp;</font></td>
+    <td height="30" width="0" align="left"><font id="bonbofdep" face="Courier New" size="6">N</font></td>
+    <td height="30" width="0" align="left"><font id="mins_to_eta" face="Courier New" size="6">61</font></td>
+  </tr>
+</table>
+</body>
+</html>

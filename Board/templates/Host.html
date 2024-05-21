@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% load custom_tags %}
+
+{% block content %}
+
+    <div class="container text-start text-truncate">
+
+        <br><br><br>
+
+        <h1>Host View</h1>
+        <span class="badge text-bg-success">Connected</span>
+
+        <br><br>
+
+        {% if user|Host_User %}
+
+        <h2>Rotations</h2>
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Stand</th>
+                    <th scope="col">A/C Reg</th>
+                    <th scope="col">ARR</th>
+                    <th scope="col">APT</th>
+                    <th scope="col">STA</th>
+                    <th scope="col">ETA</th>
+                    <th scope="col">Notes</th>
+                    <th scope="col">RMPAG</th>
+                    <th scope="col">DEP</th>
+                    <th scope="col">APT</th>
+                    <th scope="col">STD</th>
+                    <th scope="col">ETD</th>
+                    <th scope="col">SLOT</th>
+                    <th scope="col">Notes</th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                {% for rot in rotations %}
+                    {% if rotation.R_AOG %}
+                    <tr class="highlighted-row">
+                    {% else %}
+                    <tr>
+                    {% endif %}
+                        <td>{{ rot.R_STAND }}</td>
+                        <td>{{ rot.R_ACREG }}</td>
+                        <td>{{ rot.R_FTNA }}</td>
+                        <td>{{ rot.R_APTA }}</td>
+                        <td>{{ rot.R_STA|date:"H:i" }}</td>
+                        <td>{{ rot.R_ETA|date:"H:i" }}</td>
+                        <td>{{ rot.R_NA }}</td>
+                        <td>{{ rot.R_RMPAG }}</td>
+                        <td>{{ rot.R_FTND }}</td>
+                        <td>{{ rot.R_APTD }}</td>
+                        <td>{{ rot.R_STD|date:"H:i" }}</td>
+                        <td>{{ rot.R_ETD|date:"H:i" }}</td>
+                        <td>{{ rot.R_SLT|date:"H:i" }}</td>
+                        <td>{{ rot.R_ND }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% endif %}
+    
+    </div>
+
+{% endblock %}
