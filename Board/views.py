@@ -115,7 +115,7 @@ def Que_Sorter(STD, ETA, AOG):
                 else: return STD - turnArd, STD - turnArd
 
 def Que_Main():
-    with open('testn.html', 'r') as html_file:
+    with open('/home/queapp/QUE/testn.html', 'r') as html_file:
         content = html_file.read()
         soup = BeautifulSoup(content, 'lxml')
         flights = soup.find_all('tr')
