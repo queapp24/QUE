@@ -11,13 +11,15 @@
             <div class="row pe-0 mt-3">
     <!-- MAIN INFO -->
                 <div class="col-12 col-sm-3 col-lg-2 pe-1 mt-2">
-                    {% if rotation.R_AOG %}
-                    <div class="card px-0 pb-1" style="height: 85px; box-shadow: 0 0 5px rgba(0, 195, 255, 1); background-color: rgba(0, 153, 255, 0.03);">
-                    {% else %}
-                    <div class="card px-0 pb-1" style="height: 85px; background-color: rgba(78, 78, 78, 0.05);">
-                    {% endif %}
+
+                    <div class="card px-0 pb-1 
+                        {% if rotation.R_AOG %}info-AOG
+                        {% else %}info-def
+                        {% endif %}
+                    ">
+
                         <h1 class="m-0 mt-1 ps-3">{{ rotation.R_STAND }}</h1>
-                        <h5 class="m-0 ps-3">{{ rotation.R_ACREG }}<small class="text-body-secondary" style="font-size: small;">  |  {{ rotation.R_RMPAG }}</small></h5>
+                        <h5 class="m-0 ps-3">{{ rotation.R_ACREG }}</h5>
                     </div>
                 </div>
     <!-- ARRIVAL -->
@@ -25,27 +27,23 @@
 
                     {% if rotation.R_FTNA %}
 
-                        {% if rotation.R_AOG %}
-                            {% if rotation.R_FTNA.A_CLSD %}
-                                <div class="card px-0 pb-1" style="height: 85px; box-shadow: 0 0 5px rgb(146, 255, 57); background-color: rgba(0, 153, 255, 0.03);">
-                            {% else %}
-                                <div class="card px-0 pb-1" style="height: 85px; box-shadow: 0 0 5px rgba(0, 195, 255, 1); background-color: rgba(0, 153, 255, 0.03);">
+                        <div class="card px-0 pb-1 
+                            {% if rotation.R_AOG %}
+                                {% if not rotation.R_FTNA.A_CLSD %}stat-open
+                                {% else %}stat-closed
+                                {% endif %}
                             {% endif %}
-                        {% else %}
-                            <div class="card px-0 pb-1" style="height: 85px;">
-                        {% endif %}
+                        ">
 
                                 <div class="row">
+
                                     <div class="col-3">
-                                        {% if user|Active_User %}
-                                            <a data-bs-toggle="offcanvas" href="#arr_{{ rotation.R_FTNA }}" role="button" style="text-decoration: none; color: whitesmoke;">
+                                        <a data-bs-toggle="offcanvas" href="#arr_{{ rotation.R_FTNA }}" role="button" style="text-decoration: none; color: whitesmoke;">
                                                 <h1 class="m-0 mt-1 ps-3">{{ rotation.R_APTA }}</h1>
-                                            </a>
-                                        {% else %}
-                                            <h1 class="m-0 mt-1 ps-3">{{ rotation.R_APTA }}</h1>
-                                        {% endif %}
+                                        </a>
                                         <h5 class="m-0 ps-3">{{ rotation.R_FTNA }}</h5>
                                     </div>
+
                                     <div class="col-4">
                                         <h4 class="m-0 ps-4 mt-3"><small class="text-body-secondary" style="font-size: small;">STA | </small>{{ rotation.R_STA|date:"H:i" }}</h4>
                                         {% if rotation.R_FTNA.A_DRVR1 %}
@@ -54,9 +52,13 @@
                                             <h6 class="m-0 ps-4 mt-2"><small class="text-body-secondary" style="font-size: small;">Driver | </small></h6>
                                         {% endif %}
                                     </div>
+
                                     <div class="col-4">
+
                                         <h4 class="m-0 ps-4 mt-3"><small class="text-body-secondary" style="font-size: small;">ETA | </small>{{ rotation.R_ETA|date:"H:i" }}</h4>
+
                                     </div>
+
                                 </div>
                                 
                             </div>
@@ -69,25 +71,25 @@
 
                     {% if rotation.R_FTND %}
 
-                        {% if rotation.R_AOG %}
-                            {% if rotation.R_FTND.D_CLSD %}
-                                <div class="card px-0 pb-1" style="height: 85px; box-shadow: 0 0 5px rgb(146, 255, 57); background-color: rgba(0, 153, 255, 0.03);">
-                            {% else %}
-                                <div class="card px-0 pb-1" style="height: 85px; box-shadow: 0 0 5px rgba(0, 195, 255, 1); background-color: rgba(0, 153, 255, 0.03);">
+                        <div class="card px-0 pb-1 
+                            {% if rotation.R_AOG %}
+                                {% if rotation.R_FTND.D_CLSD %}stat-closed
+                                {% else %}stat-open
+                                {% endif %}
+                            {% endif %} 
+                            {% if rotation.R_FTND.D_BAGSN %}b-ready
                             {% endif %}
-                        {% else %}
-                            <div class="card px-0 pb-1" style="height: 85px;">
-                        {% endif %}
+                            {% if rotation.R_FTND.D_SENT %}b-sent
+                            {% endif %}
+                        ">
 
                             <div class="row">
                                 <div class="col-3">
-                                    {% if user|Active_User %}
-                                        <a data-bs-toggle="offcanvas" href="#dep_{{ rotation.R_FTND }}" role="button" style="text-decoration: none; color: whitesmoke;">
-                                            <h1 class="m-0 mt-1 ps-3">{{ rotation.R_APTD }}</h1>
-                                        </a>
-                                    {% else %}
+
+                                    <a data-bs-toggle="offcanvas" href="#dep_{{ rotation.R_FTND }}" role="button" style="text-decoration: none; color: whitesmoke;">
                                         <h1 class="m-0 mt-1 ps-3">{{ rotation.R_APTD }}</h1>
-                                    {% endif %}
+                                    </a>
+
                                     <h5 class="m-0 ps-3">{{ rotation.R_FTND }}</h5>
                                 </div>
                                 <div class="col-4">
@@ -100,7 +102,11 @@
                                 </div>
                                 <div class="col-4">
                                     <h4 class="m-0 ps-4 mt-3"><small class="text-body-secondary" style="font-size: small;">ETD | </small>{{ rotation.R_ETD|date:"H:i" }}</h4>
-                                    <a href="{% url 'Hide' rotation.R_FTND %}" style="text-decoration: none; color: whitesmoke;"><h4 class="m-0 ps-4 mt-1"><i class="bi bi-eye-slash" style="font-size: 1rem;"></i></h4></a>
+                                    
+                                    <a href="#hide_{{ rotation.R_FTND }}" data-bs-toggle="modal" data-bs-target="#hide_{{ rotation.R_FTND }}" role="button" style="text-decoration: none; color: whitesmoke;">
+                                        <h4 class="m-0 ps-4 mt-1"><i class="bi bi-eye-slash" style="font-size: 1rem;"></i></h4>
+                                    </a>
+
                                 </div>
                             </div>
                         </div>
@@ -113,91 +119,264 @@
 
     <!-- ARRIVAL OFF-CANVAS -->
             <div class="offcanvas offcanvas-start" tabindex="-1" id="arr_{{ rotation.R_FTNA }}" aria-labelledby="offcanvasExampleLabel">
+
                 <div class="offcanvas-header">
-                    <h2 class="offcanvas-title" id="offcanvasExampleLabel">EDIT</h2>
+                    <h2 class="offcanvas-title" id="offcanvasExampleLabel">{{ rotation.R_FTNA }} | {{ rotation.R_APTA }}</h2>
                     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                 </div>
-                <div class="offcanvas-body">
 
-                    <h3>{{ rotation.R_FTNA }} | {{ rotation.R_APTA }}</h3>
+                <div class="offcanvas-body justify-content-between align-items-center">
 
-                    <form method="POST" action="{% url 'Driver_Update' rotation.R_FTNA %}">
-                        {% csrf_token %}
-                        <input type="hidden" name="rotation_type" value="A">
-                        <input type="hidden" name="from" value="ramp">
-                        {% if not rotation.R_FTNA.A_CLSD %}
-                            <label for="exampleDataList" class="form-label">Driver</label>
+                    {% if user|Active_User %}
 
-                            <select class="form-select" name="sel_driver" aria-label="Default select example">
-                                <option selected>{{ rotation.R_FTNA.A_DRVR1 }}</option>
-                                {% for driver in drivers_ARR %}
-                                    <option value="{{ driver.DR_NAME }}">{{ driver.DR_NAME }}</option>
-                                {% endfor %}
-                            </select>
+                        <form method="POST" action="{% url 'Close' rotation.R_FTNA %}">
+                            {% csrf_token %}
+                            <div class="d-grid gap-2 mt-3">
+                                <input type="hidden" name="rotation_type" value="A">
+                                {% if rotation.R_FTNA.A_CLSD %}
+                                    <input type="hidden" name="closed" value="False">
+                                    <button class="btn btn-secondary closedButton" type="submit">
+                                        <small class="text-body-secondary" style="font-size: small;">RESUME ARRIVAL</small>
+                                    </button>
+                                {% else %}
+                                    <input type="hidden" name="closed" value="True">
+                                    <button class="btn btn-primary openButton" type="submit">
+                                        <small class="text-body-primary" style="font-size: small;">CLOSE ARRIVAL</small>
+                                    </button>
+                                {% endif %}
+                            </div>
+                        </form>
 
-                            <button type="submit" class="btn btn-primary mt-3">Apply</button>
-                        {% endif %}
-                    </form>
-                    
-                    <form method="POST" action="{% url 'Close' rotation.R_FTNA %}">
-                        {% csrf_token %}
-                        <div class="d-grid gap-2 mt-3">
-                            <input type="hidden" name="rotation_type" value="A">
-                            {% if rotation.R_FTNA.A_CLSD %}
-                                <input type="hidden" name="closed" value="False">
-                                <button class="btn btn-secondary" type="submit">Resume {{ rotation.R_APTA }} | {{ rotation.R_FTNA }}</button>
-                            {% else %}
-                                <input type="hidden" name="closed" value="True">
-                                <button class="btn btn-primary" type="submit">Close {{ rotation.R_APTA }} | {{ rotation.R_FTNA }}</button>
-                            {% endif %}
+                    {% endif %}
+
+                    <h5 class="text-center mt-2"><small class="text-body-secondary" style="font-size: small;">Arrival Info</small></h5>
+
+                    <div class="row">   
+                        <div class="col-12">
+                            <div class="card text-start" style="height: fit-content;">
+
+                                <P class="ms-2 mt-3">
+                                    <small class="text-body-secondary" style="font-size: small;">Stand | </small>
+                                    {{ rotation.R_STAND }}
+                                </P>
+                
+                                <P class="ms-2">
+                                    <small class="text-body-secondary" style="font-size: small;">Status | </small>
+                                    {% if rotation.R_AOG %} Landed
+                                    {% endif %}
+                                </P>
+                
+                                <P class="ms-2">
+                                    <small class="text-body-secondary" style="font-size: small;">Ramp Agt. | </small>
+                                    {{ rotation.R_RMPAG }}
+                                </P>
+                
+                                <P class="ms-2">
+                                    <small class="text-body-secondary" style="font-size: small;">Notes | </small>
+                                    {{ rotation.R_NA }}
+                                </P>
+
+                            </div>
                         </div>
-                    </form>
+                    </div>
+
+                    {% if user|Active_User %}
+
+                    <div class="mt-2">
+                        <form method="POST" action="{% url 'Driver_Update' rotation.R_FTNA %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="rotation_type" value="A">
+                            <input type="hidden" name="from" value="ramp">
+
+                            <h5 class="text-center"><small class="text-body-secondary" style="font-size: small;">Driver Assignment</small></h5>
+                            
+                            <div class="row">
+
+                                <div class="col-9 pe-0">
+                                    <select class="form-select py-1" name="sel_driver" aria-label="Default select example">
+                                        <option selected>{{ rotation.R_FTNA.A_DRVR1 }}</option>
+                                        {% for driver in drivers_ARR %}
+                                            <option value="{{ driver.DR_NAME }}">{{ driver.DR_NAME }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="col-3 ps-0 text-end">
+                                    <button type="submit" class="btn btn-dark py-1 px-3 " style="border-color: rgb(80, 80, 80);">
+                                        <small class="text-body-primary" style="font-size: small;">APPLY</small>
+                                    </button>
+                                </div>
+                
+                            </div>
+                        </form>
+                    </div>
+
+                    {% endif %}
 
                 </div>
+
             </div>
 
     <!-- DEPARTURE OFF-CANVAS -->
             <div class="offcanvas offcanvas-start" tabindex="-1" id="dep_{{ rotation.R_FTND }}" aria-labelledby="offcanvasExampleLabel">
+                
                 <div class="offcanvas-header">
-                    <h2 class="offcanvas-title" id="offcanvasExampleLabel">EDIT</h2>
+                    <h2 class="offcanvas-title" id="offcanvasExampleLabel">{{ rotation.R_FTND }} | {{ rotation.R_APTD }}</h2>
                     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                 </div>
-                <div class="offcanvas-body">
 
-                    <h3>{{ rotation.R_FTND }} | {{ rotation.R_APTD }}</h3>
+                <div class="offcanvas-body justify-content-between align-items-center">
 
-                    <form method="POST" action="{% url 'Driver_Update' rotation.R_FTND %}">
-                        {% csrf_token %}
-                        <input type="hidden" name="rotation_type" value="D">
-                        <input type="hidden" name="from" value="ramp">
-                        {% if not rotation.R_FTND.D_CLSD %}
-                            <label for="exampleDataList" class="form-label">Driver</label>
+                    {% if user|Active_User %}
 
-                            <select class="form-select" name="sel_driver" aria-label="Default select example">
-                                <option selected>{{ rotation.R_FTND.D_DRVR1 }}</option>
-                                {% for driver in drivers_DEP %}
-                                    <option value="{{ driver.DR_NAME }}">{{ driver.DR_NAME }}</option>
-                                {% endfor %}
-                            </select>
+                        <form method="POST" action="{% url 'Close' rotation.R_FTND %}">
+                            {% csrf_token %}
+                            <div class="d-grid gap-2 mt-3">
+                                <input type="hidden" name="rotation_type" value="D">
+                                {% if rotation.R_FTND.D_CLSD %}
+                                    <input type="hidden" name="closed" value="False">
+                                    <button class="btn btn-secondary closedButton" type="submit">
+                                        <small class="text-body-secondary" style="font-size: small;">RESUME DEPARTURE</small>
+                                    </button>
+                                {% else %}
+                                    <input type="hidden" name="closed" value="True">
+                                    <button class="btn btn-primary openButton" type="submit">
+                                        <small class="text-body-primary" style="font-size: small;">CLOSE DEPARTURE</small>
+                                    </button>
+                                {% endif %}
+                            </div>
+                        </form>
 
-                            <button type="submit" class="btn btn-primary mt-3">Apply</button>
-                        {% endif %}
-                    </form>
+                    {% endif %}
 
-                    <form method="POST" action="{% url 'Close' rotation.R_FTND %}">
-                        {% csrf_token %}
-                        <div class="d-grid gap-2 mt-3">
-                            <input type="hidden" name="rotation_type" value="D">
-                            {% if rotation.R_FTND.D_CLSD %}
-                                <input type="hidden" name="closed" value="False">
-                                <button class="btn btn-secondary" type="submit">Resume {{ rotation.R_APTD }} | {{ rotation.R_FTND }}</button>
-                            {% else %}
-                                <input type="hidden" name="closed" value="True">
-                                <button class="btn btn-primary" type="submit">Close {{ rotation.R_APTD }} | {{ rotation.R_FTND }}</button>
-                            {% endif %}
+                    <h5 class="text-center mt-2"><small class="text-body-secondary" style="font-size: small;">Departure Info</small></h5>
+
+                    <div class="row">   
+                        <div class="col-12">
+                            <div class="card text-start" style="height: fit-content;">
+                         
+                                <P class="ms-2 mt-3">
+                                    <small class="text-body-secondary" style="font-size: small;">Stand | </small>
+                                    {{ rotation.R_STAND }}
+                                </P>
+
+                                <P class="ms-2">
+                                    <small class="text-body-secondary" style="font-size: small;">Status | </small>
+                                    {% if rotation.R_AOG %} Landed
+                                    {% endif %}
+                                </P>
+
+                                <P class="ms-2">
+                                    <small class="text-body-secondary" style="font-size: small;">Ramp Agt. | </small>
+                                    {{ rotation.R_RMPAG }}
+                                </P>
+
+                                <P class="ms-2">
+                                    <small class="text-body-secondary" style="font-size: small;">Notes | </small>
+                                    {{ rotation.R_NA }}
+                                </P>
+
+                                <P class="ms-2">
+                                    <small class="text-body-secondary" style="font-size: small;">Slot (UTC Time) | </small>
+                                    {{ rotation.R_SLT|date:"H:i" }}
+                                </P>
+
+                            </div>
                         </div>
-                    </form>
+                    </div>
 
+                    {% if user|Active_User %}
+
+                    <div class="mt-2">
+
+                        <form method="POST" action="{% url 'Driver_Update' rotation.R_FTND %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="rotation_type" value="D">
+                            <input type="hidden" name="from" value="ramp">
+
+                            <h5 class="text-center"><small class="text-body-secondary" style="font-size: small;">Driver Assignment</small></h5>
+
+                            <div class="row">
+
+                                <div class="col-9 pe-0">
+                                    <select class="form-select py-1" name="sel_driver" aria-label="Default select example">
+                                        <option selected>{{ rotation.R_FTND.D_DRVR1 }}</option>
+                                        {% for driver in drivers_DEP %}
+                                            <option value="{{ driver.DR_NAME }}">{{ driver.DR_NAME }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="col-3 ps-0 text-end">
+                                    <button type="submit" class="btn btn-dark py-1 px-3" style="border-color: rgb(80, 80, 80);">
+                                        <small class="text-body-primary" style="font-size: small;">APPLY</small>
+                                    </button>
+                                </div>
+
+                            </div>
+                        </form>
+
+                    </div>
+
+                    {% endif %}
+
+                </div>
+            </div>
+
+            
+        <!-- Hide Modal -->
+            <div class="modal fade" id="hide_{{ rotation.R_FTND }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="hide_{{ rotation.R_FTND }}">Hide {{ rotation.R_FTND }}</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+
+                        <form method="POST" action="{% url 'Hide' rotation.R_FTND %}">
+                            {% csrf_token %}
+
+                            <div class="modal-body">
+                                <input class="form-control" type="text" name="notes" placeholder="Additional Notes" aria-label="default input example">
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Hide</button>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+
+        <!-- Show More.. Modal -->
+            <div class="modal fade" id="info_{{ rotation.R_FTND }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="hide_{{ rotation.R_FTND }}">{{ rotation.R_FTND }}</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+
+                        <form method="POST" action="{% url 'Hide' rotation.R_FTND %}">
+                            {% csrf_token %}
+
+                            <div class="modal-body">
+                                <input class="form-control" type="text" name="notes" placeholder="Additional Notes" aria-label="default input example">
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Hide</button>
+                            </div>
+
+                        </form>
+
+                    </div>
                 </div>
             </div>
 
@@ -207,8 +386,3 @@
 
 
 {% endblock %}
-
-
-
-
-

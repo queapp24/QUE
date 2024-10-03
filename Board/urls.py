@@ -19,4 +19,5 @@ urlpatterns = [
     path('DRVR_Area_DEP/<str:pk>', views.DRVR_Area_DEP, name="DRVR_Area_DEP"),
     path('User_Login', views.User_Login, name="User_Login"),
     path('User_Logout', views.User_Logout, name="User_Logout"),
+    path('Edit_Settings', views.Edit_Settings, name="Edit_Settings"),
 ]

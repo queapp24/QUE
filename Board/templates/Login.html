@@ -34,22 +34,28 @@
         <div class="container-fluid">
 
             <div class="cardCenter">
-                <div class="card" style="width: 21rem;">
+                <div class="card text-center" style="width: 21rem;">
+
                     <div class="card-header">
-                        Login
+                        <h3 class="text-center"><small class="text-body-secondary p-1" style="font-size: small;">LOGIN</small></h3>
                     </div>
+
                     <div class="card-body">
                         <form method="POST" action="{% url 'User_Login' %}" >
                             {% csrf_token %}
+
                             <div class="mb-3">
                                 <input type="text" class="form-control mb-2" name="username" placeholder="Username">
                                 <input type="password" class="form-control" name="password" placeholder="Password">
                             </div>
-                            <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-outline-success">Sign in</button>
-                            </div>
+
+                            <button type="submit" class="btn btn-dark" style="border-color: rgb(80, 80, 80);">
+                                <small class="text-body-primary" style="font-size: small;">SIGN IN</small>
+                            </button>
+
                         </form>
                     </div>
+
                 </div>
             </div>
 
