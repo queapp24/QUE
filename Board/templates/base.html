@@ -10,12 +10,28 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
         <style>
+
+            body {
+                background-color: rgba(6, 14, 16, 0.9)
+            }
+
             .dep-card {
                 height: 85px;
             }
+
+            .navLayout {
+                margin-left: 15%; 
+                margin-right: 15%;
+            }
+
             @media only screen and (max-width: 576px){
                 .dep-card{
                     height: 170px;
+                }
+
+                .navLayout {
+                    margin-left: 5%; 
+                    margin-right: 5%;
                 }
             }
 
@@ -30,14 +46,101 @@
                 font-size: 1.3rem;
             }
 
+            .card {
+                height: 85px;
+                background-color: rgb(0, 0, 0, 0.2); 
+            }
+
+            .hostCard {
+                height: fit-content;
+            }
+
+            .info-AOG {
+                /* background-image: linear-gradient(to top, rgba(248, 239, 233, 0.05), rgba(248, 239, 233, 0.1)) ; */
+                background-image: linear-gradient(to top, rgba(90, 193, 233, 0.28), rgba(90, 193, 233, 0.4)) ;
+                border-left-color: rgb(255, 0, 140, 0.9);
+            }
+
+            .info-def {
+                /* background-image: linear-gradient(to top, rgba(248, 239, 233, 0.05), rgba(248, 239, 233, 0.1)) ; */
+                text-decoration: none;
+            }
+
+            .stat-open {
+                background-image: linear-gradient(to top, rgba(90, 193, 233, 0.28), rgba(90, 193, 233, 0.4)) ;
+            }
+
+            .stat-closed {
+                background-image: linear-gradient(to top, rgba(69, 65, 55, 0.28), rgba(69, 65, 55, 0.4)) ;
+            }
+
+            .b-ready {
+                border-right-color: rgb(255, 115, 0);
+            }
+
+            .b-sent {
+                border-right-color: rgb(157, 255, 0);
+            }
+
+            .menuCard {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 120px;
+                background-color: rgb(0, 0, 0, 0.2);
+                transition: background-color 0.2s ease;
+            }
+
+            .menuCard:hover{
+                background-color: rgba(90, 193, 233, 0.4) ;
+            }
+
+            .menuCardLogout:hover{
+                background-color: rgba(233, 90, 131, 0.4) ;
+            }
+
+            .openButton {
+                background-color: rgba(90, 193, 233, 0.4);
+                transition: background-color 0.15s ease;
+                border-color: rgb(80, 80, 80);
+            }
+
+            .openButton:hover {
+                background-color: rgb(0, 0, 0, 0.2) ;
+                border-color: rgb(80, 80, 80);
+            }
+
+            .closedButton {
+                background-color: rgb(0, 0, 0, 0.2);
+                transition: background-color 0.15s ease;
+                border-color: rgb(80, 80, 80);
+            }
+
+            .closedButton:hover {
+                background-color: rgba(90, 193, 233, 0.4);
+                border-color: rgb(80, 80, 80);
+            }
+
+            .sendButton {
+                background-color: rgba(157, 255, 0, 0.1);
+                transition: background-color 0.15s ease;
+                border-color: rgba(157, 255, 0, 0.7);
+            }
+
+            .sendButton:hover {
+                background-color: rgb(0, 0, 0, 0.1) ;
+                border-color: rgb(80, 80, 80);
+            }
+
         </style>
-        {% if user|Host_User %}
+        <!-- {% if user|Host_User %}
             <meta http-equiv="refresh" content="60">
         {% elif user|Active_User %}
             <meta http-equiv="refresh" content="60">
         {% elif user|Viewer_User %}
             <meta http-equiv="refresh" content="60">
-        {% endif %}
+        {% endif %} -->
+        <meta http-equiv="refresh" content="{{ refresh_rate }}">
     </head>
 
     <body style="font-family: 'Roboto', sans-serif;">
