@@ -15,13 +15,15 @@
             <div class="row mt-3">
     <!-- MAIN INFO -->
                 <div class="col-12 col-sm-3 col-lg-2 pe-1 mt-2">
-                    {% if rotation.R_AOG %}
-                    <div class="card px-0 pb-1" style="height: 85px; box-shadow: 0 0 5px rgba(0, 195, 255, 1); background-color: rgba(0, 153, 255, 0.03);">
-                    {% else %}
-                    <div class="card px-0 pb-1" style="height: 85px; background-color: rgba(78, 78, 78, 0.05);">
-                    {% endif %}
+
+                    <div class="card px-0 pb-1 
+                        {% if rotation.R_AOG %}info-AOG
+                        {% else %}info-def
+                        {% endif %}
+                    ">
+
                         <h1 class="m-0 mt-1 ps-3">{{ rotation.R_STAND }}</h1>
-                        <h5 class="m-0 ps-3">{{ rotation.R_ACREG }}<small class="text-body-secondary" style="font-size: small;">  |  {{ rotation.R_RMPAG }}</small></h5>
+                        <h5 class="m-0 ps-3">{{ rotation.R_ACREG }}</h5>
                     </div>
                 </div>
     <!-- ARRIVAL -->
@@ -29,11 +31,7 @@
 
                     {% if rotation.R_FTNA != None %}
 
-                        {% if rotation.R_AOG %}
-                        <div class="card px-0 pb-1" style="height: 85px; background-color: rgba(0, 153, 255, 0.03); box-shadow: 0 0 5px rgba(0, 195, 255, 1);">
-                        {% else %}
-                        <div class="card px-0 pb-1" style="height: 85px; background-color: rgba(78, 78, 78, 0.05);">
-                        {% endif %}
+                        <div class="card px-0 pb-1">
 
                             <div class="row">
                                 <div class="col-5">
@@ -54,17 +52,13 @@
     <!-- DEPARTURE -->
                 <div class="col-12 col-sm-12 col-lg-7 ms-auto pe-1 mt-2">
 
-                    {% if rotation.R_AOG %}
-                        {% if rotation.R_FTND.D_SENT %}
-                            <div class="card px-0 pb-1 dep-card" style="box-shadow: 0 0 5px rgb(146, 255, 57); background-color: rgba(0, 153, 255, 0.03);">
-                        {% elif rotation.R_FTND.D_BAGSN %}
-                            <div class="card px-0 pb-1 dep-card" style="box-shadow: 0 0 5px rgb(255, 166, 0); background-color: rgba(0, 153, 255, 0.03);">
-                        {% else %}
-                            <div class="card px-0 pb-1 dep-card" style="box-shadow: 0 0 5px rgba(0, 195, 255, 1); background-color: rgba(0, 153, 255, 0.03);">
-                        {% endif %}
-                    {% else %}
-                        <div class="card px-0 pb-1 dep-card">
-                    {% endif %}
+                        <div class="card px-0 pb-1
+                            {% if rotation.R_FTND.D_BAGSN %}stat-open b-ready
+                            {% endif %}
+                            {% if rotation.R_FTND.D_SENT %}stat-closed b-sent
+                            {% endif %}
+                        ">
+
 
                             <div class="row">
                                 <div class="col-5 col-sm-3">
@@ -100,62 +94,106 @@
 
             </div>
 
+            <!-- DEPARTURE OFF-CANVAS -->
+
             <div class="offcanvas offcanvas-start" tabindex="-1" id="dep_{{ rotation.R_FTND }}" aria-labelledby="offcanvasExampleLabel">
+                
                 <div class="offcanvas-header">
-                    <h2 class="offcanvas-title" id="offcanvasExampleLabel">EDIT</h2>
+                    <h2 class="offcanvas-title" id="offcanvasExampleLabel">{{ rotation.R_FTND }} | {{ rotation.R_APTD }}</h2>
                     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                 </div>
-                <div class="offcanvas-body">
-                    <h3>{{ rotation.R_FTND }} | {{ rotation.R_APTD }}</h3>
-                    <label for="exampleDataList" class="form-label">Driver</label>
 
-                    <form method="POST" action="{% url 'Driver_Update' rotation.R_FTND %}">
-                        {% csrf_token %}
-                        <input type="hidden" name="rotation_type" value="D">
-                        <input type="hidden" name="from" value="bhs">
+                <div class="offcanvas-body justify-content-between align-items-center">
 
-                        <select class="form-select" name="sel_driver" aria-label="Default select example">
-                            <option selected>{{ rotation.R_FTND.D_DRVR1 }}</option>
-                            {% for driver in drivers %}
-                                <option value="{{ driver.DR_NAME }}">{{ driver.DR_NAME }}</option>
-                            {% endfor %}
-                        </select>
+                    {% if user|Active_User %}
 
-                        <button type="submit" class="btn btn-primary mt-3">Update</button>
-                    </form><br>
+                        <form method="POST" action="{% url 'Sent_Update' rotation.R_FTND %}">
+                            {% csrf_token %}
+                            <div class="d-grid gap-2 mt-1">
+                                {% if not rotation.R_FTND.D_SENT %}
+                                    <input type="hidden" name="sent" value="True">
+                                    <button type="submit" class="btn btn-success sendButton mt-3">
+                                        <small class="text-body-primary" style="font-size: small;">SEND</small>
+                                    </button>
+                                {% else %}
+                                    <input type="hidden" name="sent" value="False">
+                                    <button type="submit" class="btn btn-secondary closedButton mt-3">
+                                        <small class="text-body-secondary" style="font-size: small;">RESUME</small>
+                                    </button>
+                                {% endif %}
+                            </div>
+                        </form>
 
-                    <form method="POST" action="{% url 'Bags_Update' rotation.R_FTND %}">
-                        {% csrf_token %}
-                        <label class="form-label">Bags</label>
-                        <input type="text" class="form-control" name="bags_nbr" placeholder=" {{ rotation.R_FTND.D_BAGSN }} ">
-                        <label class="form-label mt-3">Zone</label>
+                        <div class="row mt-4">   
+                            <div class="col-12">
+                                <div class="card text-start align-items-center" style="height: fit-content;">
 
-                        <select class="form-select" name="zone" aria-label="Default select example">
-                            <option selected>{{ rotation.R_FTND.D_ZONE }}</option>
-                            <option value="1">1</option>
-                            <option value="2N">2N</option>
-                            <option value="2S">2S</option>
-                            <option value="3">3</option>
-                            <option value="5">5</option>
-                            <option value="6N">6N</option>
-                            <option value="6S">6S</option>
-                            <option value="7N">7N</option>
-                            <option value="7S">7S</option>
-                        </select>
-                        
-                        <button type="submit" class="btn btn-primary mt-3">Update</button>
-                    </form>
+                                    <form method="POST" action="{% url 'Bags_Update' rotation.R_FTND %}">
+                                    {% csrf_token %}
 
-                    <form method="POST" action="{% url 'Sent_Update' rotation.R_FTND %}">
-                        {% csrf_token %}
-                        {% if not rotation.R_FTND.D_SENT %}
-                            <input type="hidden" name="sent" value="True">
-                            <button type="submit" class="btn btn-success mt-3">Send</button>
-                        {% else %}
-                            <input type="hidden" name="sent" value="False">
-                            <button type="submit" class="btn btn-secondary mt-3">Resume</button>
-                        {% endif %}
-                    </form>
+                                        <div class="col-12">
+                                            <h5 class="text-center"><small class="text-body-secondary p-1" style="font-size: small;">Bags Number</small></h5>
+                                            <input type="text" class="form-control" name="bags_nbr" placeholder=" {{ rotation.R_FTND.D_BAGSN }} ">
+
+                                            <h5 class="text-center"><small class="text-body-secondary" style="font-size: small;">Zone</small></h5>
+                                            <select class="form-select" name="zone" aria-label="Default select example">
+                                                <option selected>{{ rotation.R_FTND.D_ZONE }}</option>
+                                                <option value="1">1</option>
+                                                <option value="2N">2N</option>
+                                                <option value="2S">2S</option>
+                                                <option value="3">3</option>
+                                                <option value="5">5</option>
+                                                <option value="6N">6N</option>
+                                                <option value="6S">6S</option>
+                                                <option value="7N">7N</option>
+                                                <option value="7S">7S</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="d-grid gap-2 mb-3">
+                                            <button type="submit" class="btn btn-dark mt-3" style="border-color: rgb(80, 80, 80);">
+                                                <small class="text-body-primary" style="font-size: small;">UPDATE</small>
+                                            </button>
+                                        </div>
+
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-3">
+
+                            <form method="POST" action="{% url 'Driver_Update' rotation.R_FTND %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="rotation_type" value="D">
+                                <input type="hidden" name="from" value="bhs">
+
+                                <h5 class="text-center"><small class="text-body-secondary" style="font-size: small;">Driver Assignment</small></h5>
+
+                                <div class="row">
+                                
+                                    <div class="col-9 pe-0">
+                                        <select class="form-select py-1" name="sel_driver" aria-label="Default select example">
+                                            <option selected>{{ rotation.R_FTND.D_DRVR1 }}</option>
+                                            {% for driver in drivers %}
+                                                <option value="{{ driver.DR_NAME }}">{{ driver.DR_NAME }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <div class="col-3 ps-0 text-end">
+                                        <button type="submit" class="btn btn-dark py-1 px-3" style="border-color: rgb(80, 80, 80);">
+                                            <small class="text-body-primary" style="font-size: small;">APPLY</small>
+                                        </button>
+                                    </div>
+                                
+                                </div>
+                            </form>
+
+                        </div>
+
+                    {% endif %}
 
                 </div>
             </div>

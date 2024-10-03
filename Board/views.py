@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from bs4 import BeautifulSoup
 from datetime import datetime
-from .models import Rotation, Driver, Arrival, Departure, Hidden
+from .models import Rotation, Driver, Arrival, Departure, Hidden, Setting
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -114,8 +114,8 @@ def Que_Sorter(STD, ETA, AOG):
                 if actual_time >= ETA : return ETA - ldg_offset, ETA - ldg_offset
                 else: return STD - turnArd, STD - turnArd
 
-def Que_Main():
-    with open('/home/queapp/QUE/testn.html', 'r') as html_file:
+def Que_Main(URL):
+    with open(URL, 'r') as html_file:
         content = html_file.read()
         soup = BeautifulSoup(content, 'lxml')
         flights = soup.find_all('tr')
@@ -149,6 +149,12 @@ def Que_Main():
                         else: data['AOG'] = True
                     if j == 20: data['BOF'] = nullCheck(info.text)
                     j += 1
+                
+                # Checks if ACREG is already inserted so it doesn't overwrite it with new data until the previous flight's departed
+                if Rotation.objects.filter(R_ACREG = data['ACREG']).exists():
+                    rot_temp = Rotation.objects.get(R_ACREG = data['ACREG'])
+                    if rot_temp.R_STA != data['STA'] or rot_temp.R_STD != data['STD']: continue
+
                 # Checks if BOF ain't None
                 if data['BOF'] != None:
                     if Rotation.objects.filter(R_ACREG = data['ACREG']).exists():
@@ -156,6 +162,7 @@ def Que_Main():
                         Arrival.objects.filter(A_FTNA = data['FTNA']).delete()
                         Departure.objects.filter(D_FTND = data['FTND']).delete()
                     continue
+
                 # Checks if departure exists
                 if data['FTND'] == None: Que_Arrival(data)
                 # If it doesn't, it starts to elaborate basic data
@@ -175,9 +182,14 @@ def Que_Main():
 
 @login_required
 def Host_View(request):
-    Que_Main()
-    _rotations = Rotation.objects.all().order_by('R_STA')
-    return render(request, 'Host.html', {'rotations': _rotations})
+    settings = Setting.load()
+    URL = settings.S_LINK
+    RATE = settings.S_RATE
+
+    Que_Main(URL)
+
+    _rotations = Rotation.objects.all().order_by('R_IOT')
+    return render(request, 'Host.html', {'rotations': _rotations, 'refresh_rate': RATE, 'URL': URL})
 
 @login_required
 def Ramp_View(request):
@@ -189,7 +201,20 @@ def Ramp_View(request):
 
     _drivers_ARR = Driver.objects.all().filter(DR_STAT = True, DR_AREA = "ARR")
     _drivers_DEP = Driver.objects.all().filter(DR_STAT = True, DR_AREA = "DEP")
-    return render(request, 'Ramp.html', {'rotations': _rotations, 'drivers_ARR': _drivers_ARR, 'drivers_DEP': _drivers_DEP, 'hidden': _hidden})
+
+    hidden_count = _hidden.count()
+    
+    settings = Setting.load()
+    RATE = settings.S_RATE
+
+    return render(request, 'Ramp.html', {
+        'rotations': _rotations, 
+        'drivers_ARR': _drivers_ARR, 
+        'drivers_DEP': _drivers_DEP, 
+        'hidden': _hidden, 
+        'hidden_count': hidden_count,
+        'refresh_rate': RATE
+    })
 
 @login_required
 def BHS_View(request):
@@ -200,11 +225,26 @@ def BHS_View(request):
         if item.H_HDDN:
             _rotations = _rotations.exclude(R_FTND=item.H_FTND.D_FTND)
 
-    return render(request, 'BHS.html', {'rotations': _rotations, 'drivers': _drivers, 'hidden': _hidden})
+    hidden_count = _hidden.count()
+
+    settings = Setting.load()
+    RATE = settings.S_RATE
+
+    return render(request, 'BHS.html', {'rotations': _rotations, 'drivers': _drivers, 'hidden': _hidden, 'hidden_count': hidden_count, 'refresh_rate': RATE})
 
 def Manage(request):
     _drivers = Driver.objects.all().order_by('-DR_STAT')
-    return render(request, 'Manage.html', {'drivers': _drivers})
+    _hidden = Hidden.objects.filter(H_USER = request.user)
+
+    hidden_count = _hidden.count()
+    refresh_rate = None
+
+    return render(request, 'Manage.html', {
+        'drivers': _drivers, 
+        'hidden': _hidden, 
+        'hidden_count': hidden_count,
+        'refresh_rate': refresh_rate
+    })
 
 def Login_Page(request):
     return render(request, 'Login.html', {})
@@ -248,6 +288,7 @@ def Hide(request, pk):
     query = Hidden(
         H_USER = request.user,
         H_FTND = Departure.objects.get(pk=pk),
+        H_NOTE = request.POST.get('notes'),
         H_HDDN = True
     )
     query.save()
@@ -321,3 +362,18 @@ def User_Logout(request):
     logout(request)
     return redirect('Ramp_View')
 
+# SETTINGS RELATED FUNCTIONS
+def Edit_Settings(request):
+    if request.method == 'POST':
+        _URL = request.POST['url']
+        _RATE = request.POST['ref_rate']
+
+        query = Setting(
+            S_LINK = _URL,
+            S_RATE = _RATE
+        )
+        query.save()
+
+        return redirect('Host_View')
+    
+    else: return redirect('Host_View')

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 class Driver(models.Model):
     DR_NAME = models.CharField(max_length=30, primary_key=True)
@@ -58,6 +59,7 @@ class Departure(models.Model):
 class Hidden(models.Model):
     H_USER = models.ForeignKey(User, on_delete=models.CASCADE)
     H_FTND = models.ForeignKey(Departure, on_delete=models.CASCADE)
+    H_NOTE = models.CharField(max_length=50, null=True, blank=True)
     H_HDDN = models.BooleanField(default=False)
 
     def __str__(self):
@@ -89,3 +91,25 @@ class Rotation(models.Model):
 
     def __str__(self):
         return self.R_ACREG
+    
+class SingletonModel(models.Model):
+    class Meta:
+        abstract = True
+
+    def save(self, *args, **kwargs):
+        self.pk = 1  # Ensure the primary key is always 1
+        super().save(*args, **kwargs)
+
+    @classmethod
+    def load(cls):
+        obj, created = cls.objects.get_or_create(pk=1)
+        return obj
+    
+class Setting(SingletonModel):
+    S_LINK = models.CharField(max_length=200, null=True, blank=True)
+    S_RATE = models.IntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(999)]
+    )
+
+    def __str__(self):
+        return f'Default'
