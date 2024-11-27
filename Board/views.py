@@ -184,7 +184,7 @@ def Que_Main(URL):
 @login_required
 def Host_View(request):
     settings = Setting.load()
-    URL = settings.S_URL
+    URL = settings.S_LINK
     RATE = settings.S_RATE
 
     Que_Main(URL)
