@@ -1,0 +1,326 @@
+{% extends 'base.html' %}
+
+{% load custom_tags %}
+
+{% if user|Host_User %}
+
+{% block content %}
+
+    <div class="container">
+
+        <div class="card align-items-center my-4" style="height: fit-content;">
+
+            <p class="text-body-secondary mt-4" style="font-size: 1.2rem;">SETTINGS</p>
+
+            <form method="POST" action="{% url 'Edit_Settings' %}" style="width: 70%;">
+                {% csrf_token %}
+
+                <p class="text-body-secondary mb-1" style="font-size: 0.8rem;">MAIN URL</p>
+                <input type="text" class="form-control mb-3" name="url" value="{{ URL }}" placeholder="{{ URL }}">
+
+                <p class="text-body-secondary mb-1" style="font-size: 0.8rem;">REFRESH RATE (s.)</p>
+                <input type="text" class="form-control mb-3" name="ref_rate" value="{{ refresh_rate }}" placeholder="{{ refresh_rate }}">
+
+                <button type="submit" class="btn btn-secondary mb-4">
+                    <h4 class="mb-0" style="font-size: 0.8rem;">APPLY</h4>
+                </button>
+
+            </form>
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-2 pe-1 mt-2">
+
+                <div class="card hostCard px-0 pb-1">
+
+                    <h5 class="m-0 mt-1 ps-3">Stand<small class="text-body-secondary" style="font-size: small;"> | AC/REG</small></h5>
+                
+                </div>
+
+            </div>
+
+            <div class="col-5 pe-1 mt-2">
+
+                    <div class="card hostCard px-0 pb-1">
+
+                        <div class="row">
+
+                            <div class="col-4">
+                                <h5 class="ps-2 mt-1 mb-0 pb-0">Arrival</h5>
+                            </div>
+
+                            <div class="col-2">
+                                <h5 class="m-0 mt-1">STA</h5>
+                            </div>
+
+                            <div class="col-2">
+                                <h5 class="m-0 mt-1">ETA</h5>
+                            </div>
+
+                            <div class="col-4">
+                                <h5 class="m-0 mt-1">Driver</h5>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+            </div>
+
+            <div class="col-5 pe-1 mt-2">
+
+                    <div class="card hostCard pb-1">
+
+                        <div class="row">
+
+                            <div class="col-4">
+                                <h5 class="ps-2 mt-1 mb-0 pb-0">Departure</h5>
+                            </div>
+
+                            <div class="col-2">
+                                <h5 class="m-0 mt-2">STD</h5>
+                            </div>
+
+                            <div class="col-2">
+                                <h5 class="m-0 mt-2">ETD</h5>
+                            </div>
+
+                            <div class="col-4">
+                                <h5 class="m-0 mt-2">Driver</h5>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+            </div>
+
+        </div>
+
+        {% for rotation in rotations %}
+
+        <div class="row">
+
+            <!-- INFO -->
+            <div class="col-2 pe-1 mt-2">
+
+                <div class="card hostCard px-0 pb-1 
+                    {% if rotation.R_AOG %}info-AOG
+                    {% else %}info-def
+                    {% endif %}
+                ">
+
+                    <h3 class="m-0 mt-1 ps-3">{{ rotation.R_STAND }}<small class="text-body-secondary" style="font-size: small;"> | {{ rotation.R_ACREG }}</small></h3>
+                
+                </div>
+
+            </div>
+
+            <!-- ARRIVAL -->
+            <div class="col-5 pe-1 mt-2">
+
+                {% if rotation.R_FTNA %}
+
+                    <div class="card hostCard px-0 pb-1 
+                        {% if rotation.R_AOG %}
+                            {% if not rotation.R_FTNA.A_CLSD %}stat-open
+                            {% else %}stat-closed
+                            {% endif %}
+                        {% endif %}
+                    ">
+
+                        <div class="row">
+
+                            <div class="col-4">
+
+                                <a data-bs-toggle="offcanvas" href="#arr_{{ rotation.R_FTNA }}" role="button" style="text-decoration: none; color: whitesmoke;">
+                                    <h3 class="ps-2 mt-1 mb-0 pb-0">{{ rotation.R_APTA }}<small class="text-body-secondary" style="font-size: .9rem;"> | {{ rotation.R_FTNA }}</small></h3>
+                                </a>
+
+                            </div>
+
+                            <div class="col-2">
+                                <h5 class="m-0 mt-2">{{ rotation.R_STA|date:"H:i" }}</h5>
+                            </div>
+
+                            <div class="col-2">
+                                <h5 class="m-0 mt-2">{{ rotation.R_ETA|date:"H:i" }}</h5>
+                            </div>
+
+                            <div class="col-4">
+                                {% if rotation.R_FTNA.A_DRVR1 %}
+                                    <h5 class="m-0 mt-2">{{ rotation.R_FTNA.A_DRVR1 }}</h5>
+                                {% else %}
+                                    <h5 class="m-0 mt-2"></h5>
+                                {% endif %}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+            <!-- DEPARTURE -->
+            <div class="col-5 pe-1 mt-2">
+
+                {% if rotation.R_FTND %}
+
+                    <div class="card hostCard pb-1 
+                        {% if rotation.R_AOG %}
+                            {% if rotation.R_FTND.D_CLSD %}stat-closed
+                            {% else %}stat-open
+                            {% endif %}
+                        {% endif %} 
+                        {% if rotation.R_FTND.D_BAGSN %}b-ready
+                        {% endif %}
+                        {% if rotation.R_FTND.D_SENT %}b-sent
+                        {% endif %}
+                    ">
+
+                        <div class="row">
+
+                            <div class="col-4">
+
+                                <a data-bs-toggle="offcanvas" href="#dep_{{ rotation.R_FTND }}" role="button" style="text-decoration: none; color: whitesmoke;">
+                                    <h3 class="ps-2 mt-1 mb-0 pb-0">{{ rotation.R_APTD }}<small class="text-body-secondary" style="font-size: .9rem;"> | {{ rotation.R_FTND }}</small></h3>
+                                </a>
+
+                            </div>
+
+                            <div class="col-2">
+                                <h5 class="m-0 mt-2">{{ rotation.R_STD|date:"H:i" }}</h5>
+                            </div>
+
+                            <div class="col-2">
+                                <h5 class="m-0 mt-2">{{ rotation.R_ETD|date:"H:i" }}</h5>
+                            </div>
+
+                            <div class="col-4">
+                                {% if rotation.R_FTND.D_DRVR1 %}
+                                    <h5 class="m-0 mt-2">{{ rotation.R_FTND.D_DRVR1 }}</h5>
+                                {% else %}
+                                    <h5 class="m-0 mt-2"></h5>
+                                {% endif %}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        <!-- ARRIVAL OFF-CANVAS -->
+        <div class="offcanvas offcanvas-start" tabindex="-1" id="arr_{{ rotation.R_FTNA }}" aria-labelledby="offcanvasExampleLabel">
+
+            <div class="offcanvas-header">
+                <h2 class="offcanvas-title" id="offcanvasExampleLabel">{{ rotation.R_FTNA }} | {{ rotation.R_APTA }}</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+
+            <div class="offcanvas-body justify-content-between align-items-center">
+
+                <h5 class="text-center mt-2"><small class="text-body-secondary" style="font-size: small;">Arrival Info</small></h5>
+
+                <div class="row">   
+                    <div class="col-12">
+                        <div class="card text-start" style="height: fit-content;">
+
+                            <P class="ms-2 mt-3">
+                                <small class="text-body-secondary" style="font-size: small;">Stand | </small>
+                                {{ rotation.R_STAND }}
+                            </P>
+            
+                            <P class="ms-2">
+                                <small class="text-body-secondary" style="font-size: small;">Status | </small>
+                                {% if rotation.R_AOG %} Landed
+                                {% endif %}
+                            </P>
+            
+                            <P class="ms-2">
+                                <small class="text-body-secondary" style="font-size: small;">Ramp Agt. | </small>
+                                {{ rotation.R_RMPAG }}
+                            </P>
+            
+                            <P class="ms-2">
+                                <small class="text-body-secondary" style="font-size: small;">Notes | </small>
+                                {{ rotation.R_NA }}
+                            </P>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- DEPARTURE OFF-CANVAS -->
+        <div class="offcanvas offcanvas-start" tabindex="-1" id="dep_{{ rotation.R_FTND }}" aria-labelledby="offcanvasExampleLabel">
+                
+            <div class="offcanvas-header">
+                <h2 class="offcanvas-title" id="offcanvasExampleLabel">{{ rotation.R_FTND }} | {{ rotation.R_APTD }}</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+
+            <div class="offcanvas-body justify-content-between align-items-center">
+
+                <h5 class="text-center mt-2"><small class="text-body-secondary" style="font-size: small;">Departure Info</small></h5>
+
+                <div class="row">   
+                    <div class="col-12">
+                        <div class="card text-start" style="height: fit-content;">
+                     
+                            <P class="ms-2 mt-3">
+                                <small class="text-body-secondary" style="font-size: small;">Stand | </small>
+                                {{ rotation.R_STAND }}
+                            </P>
+
+                            <P class="ms-2">
+                                <small class="text-body-secondary" style="font-size: small;">Status | </small>
+                                {% if rotation.R_AOG %} Landed
+                                {% endif %}
+                            </P>
+
+                            <P class="ms-2">
+                                <small class="text-body-secondary" style="font-size: small;">Ramp Agt. | </small>
+                                {{ rotation.R_RMPAG }}
+                            </P>
+
+                            <P class="ms-2">
+                                <small class="text-body-secondary" style="font-size: small;">Notes | </small>
+                                {{ rotation.R_NA }}
+                            </P>
+
+                            <P class="ms-2">
+                                <small class="text-body-secondary" style="font-size: small;">Slot (UTC Time) | </small>
+                                {{ rotation.R_SLT|date:"H:i" }}
+                            </P>
+
+                            <P class="ms-2">
+                                <small class="text-body-secondary" style="font-size: small;">Bags | </small>
+                                {{ rotation.R_FTND.D_BAGSN }}
+                            </P>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+{% endblock %}
+
+{% endif %}

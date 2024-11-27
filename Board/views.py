@@ -5,6 +5,7 @@ from .models import Rotation, Driver, Arrival, Departure, Hidden, Setting
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+import requests
 
 # Global Variables
 date_format_str = '%H:%M'
@@ -183,7 +184,7 @@ def Que_Main(URL):
 @login_required
 def Host_View(request):
     settings = Setting.load()
-    URL = settings.S_LINK
+    URL = 'testn.html'
     RATE = settings.S_RATE
 
     Que_Main(URL)
@@ -377,3 +378,85 @@ def Edit_Settings(request):
         return redirect('Host_View')
     
     else: return redirect('Host_View')
+
+
+# TESTING!!!!!!!
+
+
+@login_required
+def Test_View(request):
+    settings = Setting.load()
+    URL = settings.S_LINK
+    RATE = settings.S_RATE
+
+    Que_Main_Test(URL)
+
+    _rotations = Rotation.objects.all().order_by('R_IOT')
+    return render(request, 'Test.html', {'rotations': _rotations, 'refresh_rate': RATE, 'URL': URL})
+
+
+def Que_Main_Test(URL):
+    response = requests.get(URL)
+    if response.status_code == 200:
+        content = response.text
+        soup = BeautifulSoup(content, 'lxml')
+        flights = soup.find_all('tr')
+        i = 0
+        for flight in flights:
+            data = dict()
+            j = 0
+            if i > 1:
+                infos = flight.find_all('td')
+                for info in infos:
+                    if j == 1: data['STAND'] = nullCheck(info.text)
+                    if j == 2: data['ACREG'] = nullCheck(info.text)
+                    if j == 3: 
+                        data['FTNA'] = nullCheck(info.text)
+                        data['FTNA'] = space_remov(data['FTNA'])
+                    if j == 4: data['APTA'] = nullCheck(info.text)
+                    if j == 6: data['STA'] = nullCheck(info.text)
+                    if j == 7: data['ETA'] = nullCheck(info.text)
+                    if j == 8: data['NA'] = nullCheck(info.text)
+                    if j == 10: data['RMPAG'] = nullCheck(info.text)
+                    if j == 11: 
+                        data['FTND'] = nullCheck(info.text)
+                        data['FTND'] = space_remov(data['FTND'])
+                    if j == 12: data['APTD'] = nullCheck(info.text)
+                    if j == 14: data['STD'] = nullCheck(info.text)
+                    if j == 15: data['ETD'] = nullCheck(info.text)
+                    if j == 16: data['SLT'] = nullCheck(info.text)
+                    if j == 17: data['ND'] = nullCheck(info.text)
+                    if j == 18: 
+                        if info.text == "\xa0": data['AOG'] = False
+                        else: data['AOG'] = True
+                    if j == 20: data['BOF'] = nullCheck(info.text)
+                    j += 1
+                
+                # Checks if ACREG is already inserted so it doesn't overwrite it with new data until the previous flight's departed
+                if Rotation.objects.filter(R_ACREG = data['ACREG']).exists():
+                    rot_temp = Rotation.objects.get(R_ACREG = data['ACREG'])
+                    if rot_temp.R_STA != data['STA'] or rot_temp.R_STD != data['STD']: continue
+
+                # Checks if BOF ain't None
+                if data['BOF'] != None:
+                    if Rotation.objects.filter(R_ACREG = data['ACREG']).exists():
+                        Rotation.objects.filter(R_ACREG = data['ACREG']).delete()
+                        Arrival.objects.filter(A_FTNA = data['FTNA']).delete()
+                        Departure.objects.filter(D_FTND = data['FTND']).delete()
+                    continue
+
+                # Checks if departure exists
+                if data['FTND'] == None: Que_Arrival(data)
+                # If it doesn't, it starts to elaborate basic data
+                else:
+                    STD = timeConverter(data['STD'])
+                    ETA = timeConverter(data['ETA'])
+                    times = list()
+                    times = Que_Sorter(STD, ETA, data['AOG'])
+                    data['OOT'] = times[0]
+                    data['IOT'] = times[1]
+                    # Finally, it inserts it in the DB with IOT and OOT. It keeps updating.
+                    Que_Insert(data)
+            i += 1
+
+    else: return redirect('BHS_View')
