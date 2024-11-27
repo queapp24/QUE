@@ -5,6 +5,7 @@ urlpatterns = [
     path('ramp_view', views.Ramp_View, name="Ramp_View"),
     path('bhs_view', views.BHS_View, name="BHS_View"),
     path('host_view', views.Host_View, name="Host_View"),
+    path('test_view', views.Test_View, name="Test_View"),
     path('login_page', views.Login_Page, name="Login_Page"),
     path('Driver_Update/<str:pk>', views.Driver_Update, name="Driver_Update"),
     path('Close/<str:pk>', views.Close, name="Close"),
