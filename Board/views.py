@@ -397,7 +397,6 @@ def Test_View(request):
 
 def Que_Main_Test(URL):
     response = requests.get(URL)
-    if response.status_code == 200:
         content = response.text
         soup = BeautifulSoup(content, 'lxml')
         flights = soup.find_all('tr')
@@ -458,5 +457,3 @@ def Que_Main_Test(URL):
                     # Finally, it inserts it in the DB with IOT and OOT. It keeps updating.
                     Que_Insert(data)
             i += 1
-
-    else: return redirect('BHS_View')
