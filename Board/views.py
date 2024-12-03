@@ -116,12 +116,14 @@ def Que_Sorter(STD, ETA, AOG):
                 else: return STD - turnArd, STD - turnArd
 
 def Que_Main(URL):
+    response = requests.get(URL)
+    
     # Check if the request was successful (status code 200)
     if response.status_code != 200:
         print(f"Error fetching URL: {response.status_code}")
         return
     
-    response = requests.get(URL)
+
     content = response.content
     soup = BeautifulSoup(content, 'lxml')
     flights = soup.find_all('tr')
