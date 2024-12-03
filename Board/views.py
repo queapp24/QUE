@@ -115,8 +115,8 @@ def Que_Sorter(STD, ETA, AOG):
                 if actual_time >= ETA : return ETA - ldg_offset, ETA - ldg_offset
                 else: return STD - turnArd, STD - turnArd
 
-def Que_Main(URL):
-    response = requests.get(URL)
+def Que_Main():
+    response = requests.get('http://127.0.0.1/htdocs/rotations.html')
     
     # Check if the request was successful (status code 200)
     if response.status_code != 200:
@@ -191,10 +191,10 @@ def Que_Main(URL):
 @login_required
 def Host_View(request):
     settings = Setting.load()
-    URL = settings.S_LINK
+    # URL = settings.S_LINK
     RATE = settings.S_RATE
 
-    Que_Main(URL)
+    Que_Main()
 
     _rotations = Rotation.objects.all().order_by('R_IOT')
     return render(request, 'Host.html', {'rotations': _rotations, 'refresh_rate': RATE, 'URL': URL})
