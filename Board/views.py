@@ -124,8 +124,8 @@ def Que_Main(URL):
         return
     
 
-    content = response.content
-    soup = BeautifulSoup(content, 'lxml')
+    cont = response.content
+    soup = BeautifulSoup(cont, 'lxml')
     flights = soup.find_all('tr')
     i = 0
     for flight in flights:
