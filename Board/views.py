@@ -197,7 +197,7 @@ def Host_View(request):
     Que_Main()
 
     _rotations = Rotation.objects.all().order_by('R_IOT')
-    return render(request, 'Host.html', {'rotations': _rotations, 'refresh_rate': RATE, 'URL': URL})
+    return render(request, 'Host.html', {'rotations': _rotations, 'refresh_rate': RATE})
 
 @login_required
 def Ramp_View(request):
