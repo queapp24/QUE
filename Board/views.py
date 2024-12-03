@@ -117,6 +117,7 @@ def Que_Sorter(STD, ETA, AOG):
 
 def Que_Main():
     response = requests.get('http://127.0.0.1/htdocs/rotations.html')
+    print(response.text)
     
     # Check if the request was successful (status code 200)
     if response.status_code != 200:
